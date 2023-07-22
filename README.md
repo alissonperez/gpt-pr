@@ -30,9 +30,9 @@ pipenv install
 
 ## Usage
 
-Inside a project folder (any of them that you are working at), just runs:
+Within a project directory (this could be any directory where you're currently working), simply run the command:
 
-e.g.: suposing this project was cloned at `~/workplace/gpt-pr`
+For instance, let's suppose **this** project was cloned to `~/workplace/gpt-pr`:
 
 ```bash
 $ GH_TOKEN=[fill-it] OPENAI_API_KEY=[fill-it] PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
