@@ -1,19 +1,20 @@
 # GPT-PR
 
-GPT-PR is an open source command line designed to streamline your GitHub workflow. With GPT-PR, you can get the current directory's commit changes, generate a PR template, and automatically open a GitHub PR with a description and title, all powered by OpenAI's ChatGPT API.
+GPT-PR is an open-source command-line tool designed to streamline your GitHub workflow. By leveraging OpenAI's ChatGPT API, it can display commit changes from your current directory, generate a PR template, and automatically open a GitHub PR with a designated description and title.
 
 ## Features
-- Consider diff changes of current branch against `main` branch.
-- Possibility to remove files changed to be considered to generate PR data. (useful to ignore that `package.lock` with 5k lines changed).
-- Consider commit messages
+- Analyzes the diff changes of the current branch against the `main` branch.
+- Provides an option to exclude certain file changes from PR generation (for instance, you can ignore a `package.lock` file with 5k lines changed).
+- Incorporates commit messages into the process.
+
+## Prerequisites
+
+Before getting started, make sure you have the following installed:
+
+- Python 3.7 or higher
+- [Pipenv](https://pipenv.pypa.io/en/latest/)
 
 ## Installation
-
-Before you start, ensure you have these prerequisites installed:
-- Python 3.7 or higher
-- Pipenv
-
-Once you've confirmed that you have the prerequisites, follow these steps:
 
 1. Clone the repository:
 
@@ -30,9 +31,9 @@ pipenv install
 
 ## Usage
 
-Within a project directory (this could be any directory where you're currently working), simply run the command:
+You can use GPT-PR within any git project directory.
 
-For instance, let's suppose **this** project was cloned to `~/workplace/gpt-pr`:
+Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
 
 ```bash
 $ GH_TOKEN=[fill-it] OPENAI_API_KEY=[fill-it] PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
@@ -41,8 +42,8 @@ $ GH_TOKEN=[fill-it] OPENAI_API_KEY=[fill-it] PIPENV_PIPFILE=~/workplace/gpt-pr/
 Output:
 ![image](https://github.com/alissonperez/gpt-pr/assets/756802/5ad932e0-dd3c-4cce-b5e0-c88bd8210189)
 
-## TOOD
+## Roadmap
 
-- [ ] improve how to run it, maybe with a shell script or at least an alias in bash rc files.
-- [ ] add tests.
-- [ ] Get github pr template from current project.
+- [ ] Improve execution method, possibly through a shell script or at least an alias in bash rc files.
+- [ ] Add unit tests.
+- [ ] Fetch GitHub PR templates from the current project.
