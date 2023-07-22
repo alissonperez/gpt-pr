@@ -38,6 +38,9 @@ For instance, let's suppose **this** project was cloned to `~/workplace/gpt-pr`:
 $ GH_TOKEN=[fill-it] OPENAI_API_KEY=[fill-it] PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
 ```
 
+Output:
+![image](https://github.com/alissonperez/gpt-pr/assets/756802/5ad932e0-dd3c-4cce-b5e0-c88bd8210189)
+
 ## TOOD
 
 - [ ] improve how to run it, maybe with a shell script or at least an alias in bash rc files.
