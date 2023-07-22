@@ -2,7 +2,10 @@
 
 GPT-PR is an open-source command-line tool designed to streamline your GitHub workflow. By leveraging OpenAI's ChatGPT API, it can display commit changes from your current directory, generate a PR template, and automatically open a GitHub PR with a designated description and title.
 
+[![asciicast](https://asciinema.org/a/JIqhN0Du3bQiwXgsFJW37mMe3.svg)](https://asciinema.org/a/JIqhN0Du3bQiwXgsFJW37mMe3)
+
 ## Features
+
 - Analyzes the diff changes of the current branch against the `main` branch.
 - Provides an option to exclude certain file changes from PR generation (for instance, you can ignore a `package.lock` file with 5k lines changed).
 - Incorporates commit messages into the process.
