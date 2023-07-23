@@ -96,7 +96,10 @@ def _get_remote_info(repo):
         if remote.name != 'origin':
             continue
 
-        print(f'Remote name: {remote.name}, Urls: {remote.urls}')
+        remote_urls_joined = ','.join([str(url) for url in remote.urls])
+
+        print(f'Remote name: {remote.name}, Urls: {remote_urls_joined}')
+
         for url in remote.urls:
             return _extract_owner_and_repo(url)
 
