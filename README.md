@@ -45,6 +45,10 @@ $ GH_TOKEN=[fill-it] OPENAI_API_KEY=[fill-it] PIPENV_PIPFILE=~/workplace/gpt-pr/
 Output:
 ![image](https://github.com/alissonperez/gpt-pr/assets/756802/5ad932e0-dd3c-4cce-b5e0-c88bd8210189)
 
+## How to contribute?
+
+Follow our [CONTRIBUTING](./CONTRIBUTING.md) guide.
+
 ## Roadmap
 
 - [ ] Improve execution method, possibly through a shell script or at least an alias in bash rc files.
