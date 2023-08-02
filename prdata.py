@@ -54,7 +54,7 @@ def get_pr_data(branch_info):
     system_content = '''
     You are a helpful assistant that helps a developer getting git diff changes, main commit,
     secondary commits and a Github PR template and returns the template filled with all required description and a PR title.
-    In PR description, try to not just use commit messages, but also try to explain what was done, how it was done and how it was tested, etc.
+    In PR description, try to not just use only commit messages, try to explain what was done, how it was done, tested, etc.
     '''
 
     messages = [
