@@ -54,7 +54,7 @@ def get_pr_data(branch_info):
     system_content = '''
     You are a helpful assistant that helps a developer getting git diff changes, main commit,
     secondary commits and a Github PR template and returns the template filled with all required description and a PR title.
-    In PR description, try to not just use commit messages, but also try to explain what was done, how it was done and how it was tested, etc.
+    In PR description, try to not just use only commit messages, try to explain what was done, how it was done, tested, etc.
     '''
 
     messages = [
@@ -86,14 +86,20 @@ def get_pr_data(branch_info):
         functions=functions,
         function_call={'name': 'create_pr'},
         temperature=0,
-        max_tokens=256,
+        max_tokens=512,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
     )
 
     # Print json arguments parsed
-    arguments = json.loads(response.choices[0].message.function_call.arguments)
+    try:
+        arguments = json.loads(response.choices[0].message.function_call.arguments)
+    except Exception as e:
+        print('Error to decode message:', e)
+        print('Response message')
+        pprint.pprint(response.choices[0].message)
+        raise e
 
     return PrData(
         branch_info=branch_info,
