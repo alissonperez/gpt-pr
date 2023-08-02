@@ -93,7 +93,13 @@ def get_pr_data(branch_info):
     )
 
     # Print json arguments parsed
-    arguments = json.loads(response.choices[0].message.function_call.arguments)
+    try:
+        arguments = json.loads(response.choices[0].message.function_call.arguments)
+    except Exception as e:
+        print('Error to decode message:', e)
+        print('Response message')
+        pprint.pprint(response.choices[0].message)
+        raise e
 
     return PrData(
         branch_info=branch_info,
