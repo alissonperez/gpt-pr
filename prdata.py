@@ -86,7 +86,7 @@ def get_pr_data(branch_info):
         functions=functions,
         function_call={'name': 'create_pr'},
         temperature=0,
-        max_tokens=256,
+        max_tokens=512,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
