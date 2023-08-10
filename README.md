@@ -21,25 +21,55 @@ Before getting started, make sure you have the following installed:
 
 1. Clone the repository:
 
-```shell
+```bash
 git clone https://github.com/alissonperez/gpt-pr.git
 cd gpt-pr
 ```
 
 2. Install the dependencies with Pipenv:
 
-```shell
+```bash
 pipenv install
+```
+
+## Authentication & API Keys
+
+### Setting up GitHub Token (`GH_TOKEN`)
+
+To authenticate with GitHub, generate and export a GitHub Personal Access Token:
+
+1. Navigate to [GitHub's Personal Access Token page](https://github.com/settings/tokens).
+2. Click "Generate new token."
+3. Provide a description and select the required permissions `repo` for the token.
+4. Click "Generate token" at the bottom of the page.
+5. Copy the generated token.
+6. Export it as an environment variable:
+
+```bash
+export GH_TOKEN=your_generated_token_here
+```
+
+### Setting up OpenAI API Key (`OPENAI_API_KEY`)
+
+This project needs to interact with the ChatGPT API to generate the pull request description. So, you need to generate and export an OpenAI API Key:
+
+1. Navigate to [OpenAI's API Key page](https://platform.openai.com/signup).
+2. If you don't have an account, sign up and log in.
+3. Go to the API Keys section and click "Create new key."
+4. Provide a description and click "Create."
+5. Copy the generated API key.
+6. Export it as an environment variable:
+
+```bash
+export OPENAI_API_KEY=your_generated_api_key_here
 ```
 
 ## Usage
 
-You can use GPT-PR within any git project directory.
-
-Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
+After exporting api keys as environment variables ([Authentication & API Keys](#authentication--api-keys)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
 
 ```bash
-$ GH_TOKEN=[fill-it] OPENAI_API_KEY=[fill-it] PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
+PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
 ```
 
 Output:

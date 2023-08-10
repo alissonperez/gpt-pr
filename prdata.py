@@ -10,7 +10,13 @@ import consolecolor as cc
 TOKENIZER_RATIO = 4
 MAX_TOKENS = 6000
 
-openai.api_key = os.environ["OPENAI_API_KEY"]
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+
+if not OPENAI_API_KEY:
+    print("Please set OPENAI_API_KEY environment variable.")
+    exit(1)
+
+openai.api_key = OPENAI_API_KEY
 
 pr_template = '''### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n## How was it done?\n[Fill here]\n\n## How was it tested?\n[Fill here with test information from diff content or commits]'''
 
@@ -21,12 +27,13 @@ class PrData():
     body: str
 
     def to_display(self):
-        # print commit params
-        print(f'Creating PR at {cc.yellow(self.branch_info.owner)}/{cc.yellow(self.branch_info.repo)}')
-        print(f'{cc.bold("Title")}: {cc.yellow(self.title)}')
-        print(f'{cc.bold("Branch name")}: {cc.yellow(self.branch_info.branch)}')
-        print(f'{cc.bold("Base branch")}: {cc.yellow("main")}')
-        print(f'{cc.bold("PR Description")}: {self.body}')
+        return '\n'.join([
+            f'{cc.bold("Repository")}: {cc.yellow(self.branch_info.owner)}/{cc.yellow(self.branch_info.repo)}',
+            f'{cc.bold("Title")}: {cc.yellow(self.title)}',
+            f'{cc.bold("Branch name")}: {cc.yellow(self.branch_info.branch)}',
+            f'{cc.bold("Base branch")}: {cc.yellow("main")}',
+            f'{cc.bold("PR Description")}:\n{self.body}',
+        ])
 
 
 functions = [
@@ -54,7 +61,7 @@ def get_pr_data(branch_info):
     system_content = '''
     You are a helpful assistant that helps a developer getting git diff changes, main commit,
     secondary commits and a Github PR template and returns the template filled with all required description and a PR title.
-    In PR description, try to not just use only commit messages, try to explain what was done, how it was done, tested, etc.
+    In PR description, explain what was done, how it was done, tested, etc. If there are too many changes, you can list them in bullet points.
     '''
 
     messages = [
@@ -92,7 +99,6 @@ def get_pr_data(branch_info):
         presence_penalty=0
     )
 
-    # Print json arguments parsed
     try:
         arguments = json.loads(response.choices[0].message.function_call.arguments)
     except Exception as e:

@@ -10,9 +10,11 @@ pr_data = None
 generate_pr_data = True
 while generate_pr_data:
     pr_data = get_pr_data(branch_info)
+    print('')
     print('#########################################')
     print(pr_data.to_display())
     print('#########################################')
+    print('')
     generate_pr_data = not inquirer.confirm(message="Create PR with this? If 'no', let's try again...", default=True).execute()
     if generate_pr_data:
         print('Generating another PR data...')
