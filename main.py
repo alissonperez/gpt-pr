@@ -6,6 +6,9 @@ from prdata import get_pr_data
 
 branch_info = get_branch_info()
 
+if not branch_info:
+    exit(0)
+
 pr_data = None
 generate_pr_data = True
 while generate_pr_data:
