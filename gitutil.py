@@ -1,12 +1,9 @@
 from dataclasses import dataclass
-import pprint
 import os
 
 from git import Repo
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
-
-import consolecolor as cc
 
 
 @dataclass

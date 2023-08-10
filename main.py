@@ -15,7 +15,9 @@ while generate_pr_data:
     print(pr_data.to_display())
     print('#########################################')
     print('')
-    generate_pr_data = not inquirer.confirm(message="Create PR with this? If 'no', let's try again...", default=True).execute()
+    generate_pr_data = not inquirer.confirm(
+        message="Create PR with this? If 'no', let's try again...",
+        default=True).execute()
     if generate_pr_data:
         print('Generating another PR data...')
 

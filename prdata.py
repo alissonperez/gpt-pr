@@ -18,7 +18,10 @@ if not OPENAI_API_KEY:
 
 openai.api_key = OPENAI_API_KEY
 
-pr_template = '''### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n## How was it done?\n[Fill here]\n\n## How was it tested?\n[Fill here with test information from diff content or commits]'''
+pr_template = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
+               '## How was it done?\n[Fill here]\n\n'
+               '## How was it tested?\n[Fill here with test information from diff content or commits]')
+
 
 @dataclass
 class PrData():
@@ -57,11 +60,14 @@ functions = [
     }
 ]
 
+
 def get_pr_data(branch_info):
     system_content = '''
     You are a helpful assistant that helps a developer getting git diff changes, main commit,
-    secondary commits and a Github PR template and returns the template filled with all required description and a PR title.
-    In PR description, explain what was done, how it was done, tested, etc. If there are too many changes, you can list them in bullet points.
+    secondary commits and a Github PR template and returns the template filled with all required description
+    and a PR title.
+    In PR description, explain what was done, how it was done, tested, etc.
+    If there are too many changes, you can list them in bullet points.
     '''
 
     messages = [
