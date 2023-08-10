@@ -56,6 +56,11 @@ def get_branch_info():
     owner, repo_name = _get_remote_info(repo)
 
     commits = _get_diff_messages_against_main_branch(repo, current_branch.name)
+
+    if not commits:
+        print('No commit changes detected.')
+        return None
+
     main_commits = _get_main_commits(commits)
 
     return BranchInfo(
