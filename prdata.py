@@ -27,12 +27,13 @@ class PrData():
     body: str
 
     def to_display(self):
-        # print commit params
-        print(f'Creating PR at {cc.yellow(self.branch_info.owner)}/{cc.yellow(self.branch_info.repo)}')
-        print(f'{cc.bold("Title")}: {cc.yellow(self.title)}')
-        print(f'{cc.bold("Branch name")}: {cc.yellow(self.branch_info.branch)}')
-        print(f'{cc.bold("Base branch")}: {cc.yellow("main")}')
-        print(f'{cc.bold("PR Description")}: {self.body}')
+        return '\n'.join([
+            f'{cc.bold("Repository")}: {cc.yellow(self.branch_info.owner)}/{cc.yellow(self.branch_info.repo)}',
+            f'{cc.bold("Title")}: {cc.yellow(self.title)}',
+            f'{cc.bold("Branch name")}: {cc.yellow(self.branch_info.branch)}',
+            f'{cc.bold("Base branch")}: {cc.yellow("main")}',
+            f'{cc.bold("PR Description")}:\n{self.body}',
+        ])
 
 
 functions = [
