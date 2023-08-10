@@ -83,7 +83,7 @@ def _get_main_commits(commits):
     options = [Choice(value=commit, name=commit) for commit in commits]
 
     main_commits = inquirer.checkbox(
-        message='Select commits to be highlighted (just <enter> there is any)\':',
+        message='Pick commits to highlight in description (optional)\':',
         choices=options,
         instruction="(Press <space> to select, <enter> to confirm)",
     ).execute()
@@ -166,7 +166,7 @@ def _get_files_to_ignore(stats):
     options = [Choice(stats.file_path, name=stats.desc) for stats in stats]
 
     files_to_ignore = inquirer.checkbox(
-        message="Mark files to be IGNORED:",
+        message="Select files to exclude (or press Enter to keep all)",
         choices=options,
         instruction="(Press <space> to select, <enter> to confirm)",
     ).execute()
