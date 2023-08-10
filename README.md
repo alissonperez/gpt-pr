@@ -21,14 +21,14 @@ Before getting started, make sure you have the following installed:
 
 1. Clone the repository:
 
-```shell
+```bash
 git clone https://github.com/alissonperez/gpt-pr.git
 cd gpt-pr
 ```
 
 2. Install the dependencies with Pipenv:
 
-```shell
+```bash
 pipenv install
 ```
 
@@ -69,7 +69,7 @@ export OPENAI_API_KEY=your_generated_api_key_here
 After exporting api keys as environment variables ([Authentication & API Keys](#authentication--api-keys)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
 
 ```bash
-$ PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
+PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
 ```
 
 Output:
