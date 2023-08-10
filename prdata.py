@@ -10,7 +10,13 @@ import consolecolor as cc
 TOKENIZER_RATIO = 4
 MAX_TOKENS = 6000
 
-openai.api_key = os.environ["OPENAI_API_KEY"]
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+
+if not OPENAI_API_KEY:
+    print("Please set OPENAI_API_KEY environment variable.")
+    exit(1)
+
+openai.api_key = OPENAI_API_KEY
 
 pr_template = '''### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n## How was it done?\n[Fill here]\n\n## How was it tested?\n[Fill here with test information from diff content or commits]'''
 

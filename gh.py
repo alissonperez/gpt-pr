@@ -3,8 +3,13 @@ import os
 from github import Github
 from InquirerPy import inquirer
 
-# using an access token
-gh = Github(os.environ['GH_TOKEN'])
+GH_TOKEN = os.environ.get('GH_TOKEN')
+
+if not GH_TOKEN:
+    print("Please set GH_TOKEN environment variable")
+    exit(1)
+
+gh = Github(GH_TOKEN)
 
 def create_pr(pr_data):
     repo = gh.get_repo(f'{pr_data.branch_info.owner}/{pr_data.branch_info.repo}')
