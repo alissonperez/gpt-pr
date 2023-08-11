@@ -56,6 +56,11 @@ def get_branch_info():
     owner, repo_name = _get_remote_info(repo)
 
     commits = _get_diff_messages_against_main_branch(repo, current_branch.name)
+    commits = _get_valid_commits(commits)
+
+    if not commits:
+        raise Exception('No commits to be used.')
+
     main_commits = _get_main_commits(commits)
 
     return BranchInfo(
@@ -73,6 +78,18 @@ def _get_diff_messages_against_main_branch(repo, branch):
     commits_diff = list(repo.iter_commits(f'main..{branch}'))
 
     return [commit.message.strip('\n') for commit in commits_diff]
+
+
+def _get_valid_commits(commits):
+    options = [Choice(value=commit, name=commit) for commit in commits]
+
+    commits_to_ignore = inquirer.checkbox(
+        message='Pick commits that should be IGNORED (optional)\':',
+        choices=options,
+        instruction="(Press <space> to select, <enter> to confirm)",
+    ).execute()
+
+    return [commit for commit in commits if commit not in commits_to_ignore]
 
 
 # use inquirer to select main commits
