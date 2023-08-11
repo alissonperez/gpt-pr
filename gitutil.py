@@ -59,7 +59,8 @@ def get_branch_info():
     commits = _get_valid_commits(commits)
 
     if not commits:
-        raise Exception('No commits to be used.')
+        print('No commit changes detected.')
+        return None
 
     main_commits = _get_main_commits(commits)
 
@@ -81,6 +82,9 @@ def _get_diff_messages_against_main_branch(repo, branch):
 
 
 def _get_valid_commits(commits):
+    if not commits:
+        return commits
+
     options = [Choice(value=commit, name=commit) for commit in commits]
 
     commits_to_ignore = inquirer.checkbox(

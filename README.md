@@ -2,7 +2,7 @@
 
 GPT-PR is an open-source command-line tool designed to streamline your GitHub workflow for opening PRs. Leveraging OpenAI's ChatGPT API, it automatically opens a GitHub Pull Request with a predefined description and title directly from your current project directory.
 
-[![asciicast](https://asciinema.org/a/JIqhN0Du3bQiwXgsFJW37mMe3.svg)](https://asciinema.org/a/JIqhN0Du3bQiwXgsFJW37mMe3)
+[![asciicast](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A.svg)](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A)
 
 ## Features
 
@@ -73,7 +73,7 @@ PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/m
 ```
 
 Output:
-![image](https://github.com/alissonperez/gpt-pr/assets/756802/5ad932e0-dd3c-4cce-b5e0-c88bd8210189)
+![image](https://github.com/alissonperez/gpt-pr/assets/756802/cc6c0ca4-5759-44ce-ad35-e4e7305b3875)
 
 ## How to contribute?
 
