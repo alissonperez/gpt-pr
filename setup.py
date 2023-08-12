@@ -1,4 +1,3 @@
-import subprocess
 from setuptools import setup, find_packages
 
 
@@ -9,21 +8,28 @@ def dependencies_filter(dependency):
     return True
 
 
-def get_pipenv_requirements():
-    result = subprocess.run(['pipenv', 'requirements'], capture_output=True, text=True)
-
-    if result.returncode == 0:
+def get_requirements():
+    with open('requirements.txt') as f:
         dependencies = [dependency
-                        for dependency in result.stdout.splitlines()
+                        for dependency in f.read().splitlines()
                         if dependencies_filter(dependency)]
         return dependencies
-    else:
-        raise RuntimeError(f"'pipenv lock --requirements' failed with error: {result.stderr}")
+
+
+version = None
+if not version:
+    version_package_data = {}
+    with open('./gptpr/__version__.py') as f:
+        exec(f.read(), version_package_data)
+
+    version = version_package_data['__version__']
 
 
 setup(name='gpt-pr',
-      version='0.0.1',
-      description='Automate your GitHub workflow with GPT-PR: an OpenAI powered library for streamlined PR generation.',
+      version=version,
+      python_requires='>=3.7',
+      description=('Automate your GitHub workflow with GPT-PR: '
+                   'an OpenAI powered library for streamlined PR generation.'),
       url='http://github.com/alissonperez/gpt-pr',
       author='Alisson R. Perez',
       author_email='alissonperez@outlook.com',
@@ -32,5 +38,6 @@ setup(name='gpt-pr',
           'console_scripts': ['gpt-pr=gptpr.main:main'],
       },
       packages=find_packages('.'),
-      install_requires=get_pipenv_requirements(),
+      include_package_data=True,
+      install_requires=get_requirements(),
       zip_safe=False)
