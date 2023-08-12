@@ -1,8 +1,8 @@
 from InquirerPy import inquirer
 
-from gitutil import get_branch_info
-from gh import create_pr
-from prdata import get_pr_data
+from gptpr.gitutil import get_branch_info
+from gptpr.gh import create_pr
+from gptpr.prdata import get_pr_data
 
 
 def main():

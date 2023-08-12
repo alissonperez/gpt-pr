@@ -4,8 +4,8 @@ import json
 import os
 import openai
 
-from gitutil import BranchInfo
-import consolecolor as cc
+from gptpr.gitutil import BranchInfo
+import gptpr.consolecolor as cc
 
 TOKENIZER_RATIO = 4
 MAX_TOKENS = 6000
