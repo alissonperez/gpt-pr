@@ -1,12 +1,9 @@
 name: Release Workflow
 
-# on:
-#   push:
-#     tags:
-#       - '[0-9]+.[0-9]+.[0-9]+'
-
 on:
-  - pull_request
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build-and-publish:
@@ -33,10 +30,10 @@ jobs:
       run: pipenv install --dev
 
     - name: Set up PyPI Token
-      run: echo "pypi_token=${{ secrets.TEST_PYPI_TOKEN }}" >> $GITHUB_ENV
+      run: echo "pypi_token=${{ secrets.PYPI_TOKEN }}" >> $GITHUB_ENV
 
     - name: Run make publish
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ env.pypi_token }}
-      run: make publish-test
+      run: make publish
