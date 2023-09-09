@@ -31,7 +31,7 @@ jobs:
       run: pipenv install --dev
 
     - name: Set up PyPI Token
-      run: echo "pypi_token=${{ secrets.PYPI_TOKEN }}" >> $GITHUB_ENV
+      run: echo "pypi_token=${{ secrets.TEST_PYPI_TOKEN }}" >> $GITHUB_ENV
 
     - name: Run make publish
       env:
