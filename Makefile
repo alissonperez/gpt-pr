@@ -10,10 +10,10 @@ build: cleanup requirements
 	python3 -m build
 
 publish-test: build
-	python3 -m twine upload --repository testpypi dist/* --verbose
+	pipenv run twine upload --repository testpypi dist/* --verbose
 
 publish: build
-	python3 -m twine upload --repository pypi dist/* --verbose
+	pipenv run twine upload --repository pypi dist/* --verbose
 
 lint:
 	pipenv run flake8 .
