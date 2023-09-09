@@ -35,8 +35,10 @@ You can install and use GPT-PR in one of two ways. Choose the option that best s
 1. Install the package:
 
 ```bash
-pip install gpt-pr
+pip install -U gpt-pr
 ```
+
+> Note: Use this command to **update** gpt-pr package to the latest version.
 
 2. Export API keys as environment variables ([Authentication & API Keys](#authentication--api-keys)).
 
