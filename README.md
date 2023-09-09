@@ -17,19 +17,46 @@ Before getting started, make sure you have the following installed:
 - Python 3.7 or higher
 - [Pipenv](https://pipenv.pypa.io/en/latest/)
 
-## Installation
+## Installation and usage
+
+You can install and use GPT-PR in one of two ways. Choose the option that best suits your needs.
+
+### Option 1: Using `pip install` (Recommended)
+
+1. Install the package:
+
+```bash
+pip install gpt-pr
+```
+
+2. Export API keys as environment variables ([Authentication & API Keys](#authentication--api-keys)).
+
+3. Inside the Git repository you are working on, ensure you have pushed your branch to origin, then run:
+
+```bash
+gpt-pr
+```
+
+### Option 2: Cloning the code
+
 
 1. Clone the repository:
 
 ```bash
 git clone https://github.com/alissonperez/gpt-pr.git
-cd gpt-pr
 ```
 
-2. Install the dependencies with Pipenv:
+2. Navigate to the project directory and install dependencies:
 
 ```bash
+cd gpt-pr
 pipenv install
+```
+
+After exporting api keys as environment variables ([Authentication & API Keys](#authentication--api-keys)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
+
+```bash
+PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
 ```
 
 ## Authentication & API Keys
@@ -62,14 +89,6 @@ This project needs to interact with the ChatGPT API to generate the pull request
 
 ```bash
 export OPENAI_API_KEY=your_generated_api_key_here
-```
-
-## Usage
-
-After exporting api keys as environment variables ([Authentication & API Keys](#authentication--api-keys)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
-
-```bash
-PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
 ```
 
 Output:
