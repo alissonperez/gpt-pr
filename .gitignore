@@ -161,3 +161,6 @@ cython_debug/
 
 # Emacs
 *~
+
+# Requirements to be used to publish package (we are using pipenv)
+requirements.txt
