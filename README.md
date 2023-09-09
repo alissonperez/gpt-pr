@@ -4,6 +4,15 @@ GPT-PR is an open-source command-line tool designed to streamline your GitHub wo
 
 [![asciicast](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A.svg)](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A)
 
+## Table of Contents
+
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation and Usage](#installation-and-usage)
+- [Authentication & API Keys](#authentication--api-keys)
+- [How to Contribute](#how-to-contribute)
+- [Roadmap](#roadmap)
+
 ## Features
 
 - Analyzes the diff changes of the current branch against the `main` branch.
@@ -96,10 +105,11 @@ Output:
 
 ## How to contribute?
 
-Follow our [CONTRIBUTING](./CONTRIBUTING.md) guide.
+Please follow our [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
 ## Roadmap
 
-- [ ] Improve execution method, possibly through a shell script or at least an alias in bash rc files.
+- [x] Improve execution method, possibly through a shell script or at least an alias in bash rc files.
+  - Change to use with pip installation and console_scripts entry point.
 - [ ] Add unit tests.
 - [ ] Fetch GitHub PR templates from the current project.
