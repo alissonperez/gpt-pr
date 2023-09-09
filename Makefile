@@ -5,6 +5,9 @@ cleanup:
 requirements:
 	pipenv requirements > requirements.txt
 
+install:
+	python setup.py install
+
 build: cleanup requirements
 	@echo "Building..."
 	python3 -m build
