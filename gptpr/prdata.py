@@ -18,9 +18,31 @@ if not OPENAI_API_KEY:
 
 openai.api_key = OPENAI_API_KEY
 
-pr_template = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
-               '## How was it done?\n[Fill here]\n\n'
-               '## How was it tested?\n[Fill here with test information from diff content or commits]')
+DEFAULT_PR_TEMPLATE = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
+                       '## How was it done?\n[Fill here]\n\n'
+                       '## How was it tested?\n[Fill here with test information from diff content or commits]')
+
+def get_pr_template():
+    pr_template = DEFAULT_PR_TEMPLATE
+
+    try:
+        github_dir = os.path.join(os.getcwd(), '.github')
+        github_files = os.listdir(github_dir)
+        pr_template_file = [f for f in github_files if f.lower().startswith('pull_request_template')][0]
+        pr_template_file_path = os.path.join(github_dir, pr_template_file)
+
+        with open(pr_template_file_path, 'r') as f:
+            local_pr_template = f.read()
+
+            if local_pr_template.strip() != '':
+                print('Found PR template at:', pr_template_file_path)
+                pr_template = local_pr_template
+            else:
+                print('Empty PR template at:', pr_template_file_path, 'using default template.')
+    except:
+        print('PR template not found in .github dir. Using default template.')
+
+    return pr_template
 
 
 @dataclass
@@ -80,7 +102,7 @@ def get_pr_data(branch_info):
     else:
         messages.append({'role': 'user', 'content': 'git commits: ' + '\n'.join(branch_info.commits)})
 
-    messages.append({'role': 'user', 'content': 'PR template:\n' + pr_template})
+    messages.append({'role': 'user', 'content': 'PR template:\n' + get_pr_template()})
 
     current_total_length = sum([len(m['content']) for m in messages])
 
