@@ -22,6 +22,7 @@ DEFAULT_PR_TEMPLATE = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
                        '## How was it done?\n[Fill here]\n\n'
                        '## How was it tested?\n[Fill here with test information from diff content or commits]')
 
+
 def get_pr_template():
     pr_template = DEFAULT_PR_TEMPLATE
 
@@ -39,7 +40,7 @@ def get_pr_template():
                 pr_template = local_pr_template
             else:
                 print('Empty PR template at:', pr_template_file_path, 'using default template.')
-    except:
+    except Exception:
         print('PR template not found in .github dir. Using default template.')
 
     return pr_template
