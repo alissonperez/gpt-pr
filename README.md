@@ -50,7 +50,6 @@ gpt-pr
 
 ### Option 2: Cloning the code
 
-
 1. Clone the repository:
 
 ```bash
@@ -67,7 +66,9 @@ pipenv install
 After exporting api keys as environment variables ([Authentication & API Keys](#authentication--api-keys)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
 
 ```bash
-PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile pipenv run python ~/workplace/gpt-pr/main.py
+PYTHONPATH=~/workplace/gpt-pr/gpt-pr \
+PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile \
+pipenv run python ~/workplace/gpt-pr/gptpr/main.py
 ```
 
 ## Authentication & API Keys
@@ -113,5 +114,5 @@ Please follow our [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
 - [x] Improve execution method, possibly through a shell script or at least an alias in bash rc files.
   - Change to use with pip installation and console_scripts entry point.
+- [x] Fetch GitHub PR templates from the current project.
 - [ ] Add unit tests.
-- [ ] Fetch GitHub PR templates from the current project.
