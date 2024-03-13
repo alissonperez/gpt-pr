@@ -26,7 +26,7 @@ Before getting started, make sure you have the following installed:
 - Python 3.7 or higher
 - [Pipenv](https://pipenv.pypa.io/en/latest/)
 
-## Installation and usage
+## Installation
 
 You can install and use GPT-PR in one of two ways. Choose the option that best suits your needs.
 
@@ -45,7 +45,7 @@ pip install -U gpt-pr
 3. Inside the Git repository you are working on, ensure you have pushed your branch to origin, then run:
 
 ```bash
-gpt-pr
+gpt-pr --help
 ```
 
 ### Option 2: Cloning the code
@@ -68,7 +68,31 @@ After exporting api keys as environment variables ([Authentication & API Keys](#
 ```bash
 PYTHONPATH=~/workplace/gpt-pr/gpt-pr \
 PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile \
-pipenv run python ~/workplace/gpt-pr/gptpr/main.py
+pipenv run python ~/workplace/gpt-pr/gptpr/main.py --help
+```
+
+## Usage
+
+### Generating Github Pull Requests
+
+To create a Pull request from your current branch commits to merge with `main` branch, just run:
+
+```
+gpt-pr
+```
+
+If you would like to compare with other base branch that is not `main`, just use `-b` param:
+
+```
+gpt-pr -b my-other-branch
+```
+
+### Usage help
+
+To show help commands:
+
+```
+gpt-pr -h
 ```
 
 ## Authentication & API Keys
