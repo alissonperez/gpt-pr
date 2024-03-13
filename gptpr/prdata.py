@@ -97,8 +97,8 @@ def get_pr_data(branch_info):
         {'role': 'system', 'content': system_content},
     ]
 
-    if len(branch_info.main_commits) > 0:
-        messages.append({'role': 'user', 'content': 'main commits: ' + '\n'.join(branch_info.main_commits)})
+    if len(branch_info.highlight_commits) > 0:
+        messages.append({'role': 'user', 'content': 'main commits: ' + '\n'.join(branch_info.highlight_commits)})
         messages.append({'role': 'user', 'content': 'secondary commits: ' + '\n'.join(branch_info.commits)})
     else:
         messages.append({'role': 'user', 'content': 'git commits: ' + '\n'.join(branch_info.commits)})

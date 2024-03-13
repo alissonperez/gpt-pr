@@ -1,3 +1,4 @@
+import fire
 from InquirerPy import inquirer
 
 from gptpr.gitutil import get_branch_info
@@ -5,8 +6,11 @@ from gptpr.gh import create_pr
 from gptpr.prdata import get_pr_data
 
 
-def main():
-    branch_info = get_branch_info()
+def run(base_branch='main'):
+    '''
+    Create Pull Requests from current branch with base branch (default 'main' branch)
+    '''
+    branch_info = get_branch_info(base_branch)
 
     if not branch_info:
         exit(0)
@@ -27,6 +31,10 @@ def main():
             print('Generating another PR data...')
 
     create_pr(pr_data)
+
+
+def main():
+    fire.Fire(run)
 
 
 if __name__ == '__main__':

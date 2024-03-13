@@ -12,7 +12,7 @@ class BranchInfo:
     repo: str
     branch: str
     commits: list
-    main_commits: list
+    highlight_commits: list
     diff: str
 
 
@@ -31,7 +31,7 @@ class FileChange:
         return f'{self.file_path} (+{(self.lines_added)} -{self.lines_removed})'
 
 
-def get_branch_info():
+def get_branch_info(base_branch):
     # Get current directory
     current_dir = os.getcwd()
 
@@ -53,30 +53,40 @@ def get_branch_info():
     else:
         raise Exception('Not currently on any branch.')
 
+    if not _branch_exists(repo, base_branch):
+        raise Exception(f'Base branch {base_branch} does not exist.')
+
     owner, repo_name = _get_remote_info(repo)
 
-    commits = _get_diff_messages_against_main_branch(repo, current_branch.name)
+    commits = _get_diff_messages_against_base_branch(repo, current_branch.name, base_branch)
     commits = _get_valid_commits(commits)
 
     if not commits:
         print('No commit changes detected.')
         return None
 
-    main_commits = _get_main_commits(commits)
+    highlight_commits = _get_highlight_commits(commits)
 
     return BranchInfo(
         owner=owner,
         repo=repo_name,
         branch=current_branch.name,
         commits=commits,
-        main_commits=main_commits,
+        highlight_commits=highlight_commits,
         diff=_get_diff_changes(repo, current_branch.name)
     )
 
 
-def _get_diff_messages_against_main_branch(repo, branch):
+def _branch_exists(repo, branch_name):
+    if branch_name in repo.branches:
+        return True
+
+    return False
+
+
+def _get_diff_messages_against_base_branch(repo, branch, base_branch):
     # Get commit messages that are in the current branch but not in the main branch
-    commits_diff = list(repo.iter_commits(f'main..{branch}'))
+    commits_diff = list(repo.iter_commits(f'{base_branch}..{branch}'))
 
     return [commit.message.strip('\n') for commit in commits_diff]
 
@@ -97,16 +107,16 @@ def _get_valid_commits(commits):
 
 
 # use inquirer to select main commits
-def _get_main_commits(commits):
+def _get_highlight_commits(commits):
     options = [Choice(value=commit, name=commit) for commit in commits]
 
-    main_commits = inquirer.checkbox(
+    highlight_commits = inquirer.checkbox(
         message='Pick commits to highlight in description (optional)\':',
         choices=options,
         instruction="(Press <space> to select, <enter> to confirm)",
     ).execute()
 
-    return main_commits
+    return highlight_commits
 
 
 def _get_remote_info(repo):
