@@ -139,4 +139,5 @@ Please follow our [CONTRIBUTING](./CONTRIBUTING.md) guide.
 - [x] Improve execution method, possibly through a shell script or at least an alias in bash rc files.
   - Change to use with pip installation and console_scripts entry point.
 - [x] Fetch GitHub PR templates from the current project.
+- [ ] Add configuration to set which LLM and model should be used (OpenAI GPT, Mistral, etc...)
 - [ ] Add unit tests.
