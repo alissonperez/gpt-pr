@@ -16,9 +16,11 @@ def get_requirements():
                         if dependencies_filter(dependency)]
         return dependencies
 
+
 version = os.environ.get('VERSION')
 if not version:
     raise Exception('VERSION environment variable not set')
+
 
 setup(name='gpt-pr',
       version=version,
