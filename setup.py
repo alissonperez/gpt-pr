@@ -22,6 +22,13 @@ if not version:
     raise Exception('VERSION environment variable not set')
 
 
+def write_version(current_version):
+    with open('gptpr/version.py', 'w') as f:
+        f.write(f'__version__ = "{current_version}"\n')
+
+
+write_version(version)
+
 setup(name='gpt-pr',
       version=version,
       python_requires='>=3.7',

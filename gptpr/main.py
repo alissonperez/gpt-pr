@@ -4,12 +4,17 @@ from InquirerPy import inquirer
 from gptpr.gitutil import get_branch_info
 from gptpr.gh import create_pr
 from gptpr.prdata import get_pr_data
+from gptpr.version import __version__
 
 
-def run(base_branch='main', yield_confirmation=False):
+def run(base_branch='main', yield_confirmation=False, version=False):
     '''
     Create Pull Requests from current branch with base branch (default 'main' branch)
     '''
+
+    if version:
+        print('Current version:', __version__)
+        return
 
     branch_info = get_branch_info(base_branch, yield_confirmation)
 

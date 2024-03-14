@@ -1,12 +1,14 @@
 
 cleanup:
 	rm -rf dist
+	pip uninstall gpt-pr --yes
 
 requirements:
 	pipenv requirements > requirements.txt
 
-install:
-	python setup.py install
+install: cleanup requirements
+	python setup.py clean --all
+	pip install .
 
 build: cleanup requirements
 	@echo "Building..."
