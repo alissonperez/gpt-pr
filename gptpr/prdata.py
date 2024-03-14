@@ -83,13 +83,14 @@ functions = [
 
 
 def get_pr_data(branch_info):
-    system_content = '''
-    You are a helpful assistant that helps a developer getting git diff changes, main commit,
-    secondary commits and a Github PR template and returns the template filled with all required description
-    and a PR title.
-    In PR description, explain what was done, how it was done, tested, etc.
-    If there are too many changes, you can list them in bullet points.
-    '''
+    system_content = ('You are a development assistant designed to craft Git pull requests '
+                      'by incorporating information from main and secondary commits, diff changes, '
+                      'and adhering to a provided PR template. Your output includes a complete PR '
+                      'template with all necessary details and a suitable PR title. In the '
+                      'PR description, detail the work accomplished, the methodology employed, '
+                      'including testing procedures, and list significant changes in bullet points '
+                      'if they are extensive. Avoid incorporating diff content directly into '
+                      'the PR description.')
 
     messages = [
         {'role': 'system', 'content': system_content},
