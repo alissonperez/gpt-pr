@@ -32,8 +32,14 @@ jobs:
     - name: Set up PyPI Token
       run: echo "pypi_token=${{ secrets.PYPI_TOKEN }}" >> $GITHUB_ENV
 
+    - name: 'Determine VERSION from tag'
+      id: 'version'
+      run: |
+        echo "value=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
     - name: Run make publish
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ env.pypi_token }}
+        VERSION: ${{ steps.version.outputs.value }}
       run: make publish
