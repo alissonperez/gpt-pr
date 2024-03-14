@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import pprint
 import json
 import os
 from openai import OpenAI
@@ -129,16 +128,34 @@ def get_pr_data(branch_info):
         presence_penalty=0
     )
 
-    try:
-        arguments = json.loads(chat_completion.choices[0].message.function_call.arguments)
-    except Exception as e:
-        print('Error to decode message:', e)
-        print('Response message')
-        pprint.pprint(chat_completion.choices[0].message)
-        raise e
+    arguments = _parse_json(chat_completion.choices[0].message.function_call.arguments)
 
     return PrData(
         branch_info=branch_info,
         title=arguments['title'],
         body=arguments['description']
     )
+
+
+def _parse_json(content):
+    '''
+    A bit of a hack to parse the json content from the chat completion
+    Sometimes it returns a string with invalid json content (line breaks) that
+    makes it hard to parse.
+    example:
+
+    content = '{\n"title": "feat(dependencies): pin dependencies versions",\n"description":
+                "### Ref. [Link]\n\n## What was done? ..."\n}'
+    '''
+
+    try:
+        content = content.replace('{\n"title":', '{"title":')
+        content = content.replace(',\n"description":', ',"description":')
+        content = content.replace('\n}', '}')
+        content = content.replace('\n', '\\n')
+
+        return json.loads(content)
+    except Exception as e:
+        print('Error to decode message:', e)
+        print('Content:', content)
+        raise e
