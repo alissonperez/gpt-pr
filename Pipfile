@@ -4,16 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-gitpython = "*"
-openai = "*"
-pygithub = "*"
-prompt-toolkit = "*"
-inquirerpy = "*"
-fire = "*"
+gitpython = "3.1.42"
+openai = "1.14.0"
+pygithub = "2.2.0"
+prompt-toolkit = "3.0.43"
+inquirerpy = "0.3.4"
+fire = "0.6.0"
 
 [dev-packages]
-flake8 = "*"
-twine = "*"
+flake8 = "5.0.4"
+twine = "4.0.2"
 
 [requires]
 python_version = "3.7"

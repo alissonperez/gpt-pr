@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import pprint
 import json
 import os
-import openai
+from openai import OpenAI
 
 from gptpr.gitutil import BranchInfo
 import gptpr.consolecolor as cc
@@ -16,14 +16,12 @@ if not OPENAI_API_KEY:
     print("Please set OPENAI_API_KEY environment variable.")
     exit(1)
 
-openai.api_key = OPENAI_API_KEY
-
 DEFAULT_PR_TEMPLATE = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
                        '## How was it done?\n[Fill here]\n\n'
                        '## How was it tested?\n[Fill here with test information from diff content or commits]')
 
 
-def get_pr_template():
+def _get_pr_template():
     pr_template = DEFAULT_PR_TEMPLATE
 
     try:
@@ -103,7 +101,7 @@ def get_pr_data(branch_info):
     else:
         messages.append({'role': 'user', 'content': 'git commits: ' + '\n'.join(branch_info.commits)})
 
-    messages.append({'role': 'user', 'content': 'PR template:\n' + get_pr_template()})
+    messages.append({'role': 'user', 'content': 'PR template:\n' + _get_pr_template()})
 
     current_total_length = sum([len(m['content']) for m in messages])
 
@@ -116,9 +114,11 @@ def get_pr_data(branch_info):
     else:
         messages.append({'role': 'user', 'content': 'Diff changes:\n' + branch_info.diff})
 
-    response = openai.ChatCompletion.create(
-        model='gpt-4-0613',
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    chat_completion = client.chat.completions.create(
         messages=messages,
+        model='gpt-4-0613',
         functions=functions,
         function_call={'name': 'create_pr'},
         temperature=0,
@@ -129,11 +129,11 @@ def get_pr_data(branch_info):
     )
 
     try:
-        arguments = json.loads(response.choices[0].message.function_call.arguments)
+        arguments = json.loads(chat_completion.choices[0].message.function_call.arguments)
     except Exception as e:
         print('Error to decode message:', e)
         print('Response message')
-        pprint.pprint(response.choices[0].message)
+        pprint.pprint(chat_completion.choices[0].message)
         raise e
 
     return PrData(
