@@ -14,6 +14,7 @@ fire = "0.6.0"
 [dev-packages]
 flake8 = "5.0.4"
 twine = "4.0.2"
+pytest = "7.4.4"
 
 [requires]
 python_version = "3.7"

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import pprint
 import json
 import os
 from openai import OpenAI
@@ -9,12 +8,6 @@ import gptpr.consolecolor as cc
 
 TOKENIZER_RATIO = 4
 MAX_TOKENS = 6000
-
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-
-if not OPENAI_API_KEY:
-    print("Please set OPENAI_API_KEY environment variable.")
-    exit(1)
 
 DEFAULT_PR_TEMPLATE = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
                        '## How was it done?\n[Fill here]\n\n'
@@ -83,13 +76,14 @@ functions = [
 
 
 def get_pr_data(branch_info):
-    system_content = '''
-    You are a helpful assistant that helps a developer getting git diff changes, main commit,
-    secondary commits and a Github PR template and returns the template filled with all required description
-    and a PR title.
-    In PR description, explain what was done, how it was done, tested, etc.
-    If there are too many changes, you can list them in bullet points.
-    '''
+    system_content = ('You are a development assistant designed to craft Git pull requests '
+                      'by incorporating information from main and secondary commits, diff changes, '
+                      'and adhering to a provided PR template. Your output includes a complete PR '
+                      'template with all necessary details and a suitable PR title. In the '
+                      'PR description, detail the work accomplished, the methodology employed, '
+                      'including testing procedures, and list significant changes in bullet points '
+                      'if they are extensive. Avoid incorporating diff content directly into '
+                      'the PR description.')
 
     messages = [
         {'role': 'system', 'content': system_content},
@@ -114,7 +108,13 @@ def get_pr_data(branch_info):
     else:
         messages.append({'role': 'user', 'content': 'Diff changes:\n' + branch_info.diff})
 
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    openai_api_key = os.environ.get('OPENAI_API_KEY')
+
+    if not openai_api_key:
+        print("Please set OPENAI_API_KEY environment variable.")
+        exit(1)
+
+    client = OpenAI(api_key=openai_api_key)
 
     chat_completion = client.chat.completions.create(
         messages=messages,
@@ -128,16 +128,34 @@ def get_pr_data(branch_info):
         presence_penalty=0
     )
 
-    try:
-        arguments = json.loads(chat_completion.choices[0].message.function_call.arguments)
-    except Exception as e:
-        print('Error to decode message:', e)
-        print('Response message')
-        pprint.pprint(chat_completion.choices[0].message)
-        raise e
+    arguments = _parse_json(chat_completion.choices[0].message.function_call.arguments)
 
     return PrData(
         branch_info=branch_info,
         title=arguments['title'],
         body=arguments['description']
     )
+
+
+def _parse_json(content):
+    '''
+    A bit of a hack to parse the json content from the chat completion
+    Sometimes it returns a string with invalid json content (line breaks) that
+    makes it hard to parse.
+    example:
+
+    content = '{\n"title": "feat(dependencies): pin dependencies versions",\n"description":
+                "### Ref. [Link]\n\n## What was done? ..."\n}'
+    '''
+
+    try:
+        content = content.replace('{\n"title":', '{"title":')
+        content = content.replace(',\n"description":', ',"description":')
+        content = content.replace('\n}', '}')
+        content = content.replace('\n', '\\n')
+
+        return json.loads(content)
+    except Exception as e:
+        print('Error to decode message:', e)
+        print('Content:', content)
+        raise e
