@@ -9,12 +9,6 @@ import gptpr.consolecolor as cc
 TOKENIZER_RATIO = 4
 MAX_TOKENS = 6000
 
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-
-if not OPENAI_API_KEY:
-    print("Please set OPENAI_API_KEY environment variable.")
-    exit(1)
-
 DEFAULT_PR_TEMPLATE = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
                        '## How was it done?\n[Fill here]\n\n'
                        '## How was it tested?\n[Fill here with test information from diff content or commits]')
@@ -114,7 +108,13 @@ def get_pr_data(branch_info):
     else:
         messages.append({'role': 'user', 'content': 'Diff changes:\n' + branch_info.diff})
 
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    openai_api_key = os.environ.get('OPENAI_API_KEY')
+
+    if not openai_api_key:
+        print("Please set OPENAI_API_KEY environment variable.")
+        exit(1)
+
+    client = OpenAI(api_key=openai_api_key)
 
     chat_completion = client.chat.completions.create(
         messages=messages,
