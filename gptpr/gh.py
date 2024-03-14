@@ -11,12 +11,13 @@ if not GH_TOKEN:
 gh = Github(GH_TOKEN)
 
 
-def create_pr(pr_data):
+def create_pr(pr_data, yield_confirmation):
     repo = gh.get_repo(
         f'{pr_data.branch_info.owner}/{pr_data.branch_info.repo}')
 
-    pr_confirmation = inquirer.confirm(message="Create GitHub PR?",
-                                       default=True).execute()
+    pr_confirmation = yield_confirmation or inquirer.confirm(
+        message="Create GitHub PR?",
+        default=True).execute()
 
     if pr_confirmation:
         pr = repo.create_pull(title=pr_data.title, body=pr_data.body,

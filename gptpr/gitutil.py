@@ -31,7 +31,7 @@ class FileChange:
         return f'{self.file_path} (+{(self.lines_added)} -{self.lines_removed})'
 
 
-def get_branch_info(base_branch):
+def get_branch_info(base_branch, yield_confirmation):
     # Get current directory
     current_dir = os.getcwd()
 
@@ -59,13 +59,13 @@ def get_branch_info(base_branch):
     owner, repo_name = _get_remote_info(repo)
 
     commits = _get_diff_messages_against_base_branch(repo, current_branch.name, base_branch)
-    commits = _get_valid_commits(commits)
+    commits = _get_valid_commits(commits, yield_confirmation)
 
     if not commits:
         print('No commit changes detected.')
         return None
 
-    highlight_commits = _get_highlight_commits(commits)
+    highlight_commits = _get_highlight_commits(commits, yield_confirmation)
 
     return BranchInfo(
         owner=owner,
@@ -73,7 +73,7 @@ def get_branch_info(base_branch):
         branch=current_branch.name,
         commits=commits,
         highlight_commits=highlight_commits,
-        diff=_get_diff_changes(repo, current_branch.name)
+        diff=_get_diff_changes(repo, current_branch.name, yield_confirmation)
     )
 
 
@@ -91,23 +91,27 @@ def _get_diff_messages_against_base_branch(repo, branch, base_branch):
     return [commit.message.strip('\n') for commit in commits_diff]
 
 
-def _get_valid_commits(commits):
+def _get_valid_commits(commits, yield_confirmation):
     if not commits:
         return commits
 
     options = [Choice(value=commit, name=commit) for commit in commits]
 
-    commits_to_ignore = inquirer.checkbox(
-        message='Pick commits that should be IGNORED (optional)\':',
-        choices=options,
-        instruction="(Press <space> to select, <enter> to confirm)",
-    ).execute()
+    commits_to_ignore = []
+    if not yield_confirmation:
+        commits_to_ignore = inquirer.checkbox(
+            message='Pick commits that should be IGNORED (optional)\':',
+            choices=options,
+            instruction="(Press <space> to select, <enter> to confirm)",
+        ).execute()
 
     return [commit for commit in commits if commit not in commits_to_ignore]
 
 
-# use inquirer to select main commits
-def _get_highlight_commits(commits):
+def _get_highlight_commits(commits, yield_confirmation):
+    if yield_confirmation or len(commits) <= 1:
+        return []
+
     options = [Choice(value=commit, name=commit) for commit in commits]
 
     highlight_commits = inquirer.checkbox(
@@ -143,11 +147,11 @@ def _extract_owner_and_repo(repo_url):
     return owner, '.'.join(repo_info.split('.')[:-1])
 
 
-def _get_diff_changes(repo, branch):
+def _get_diff_changes(repo, branch, yield_confirmation):
     diff_changes = []
 
     stats = _get_stats(repo, branch)
-    files_to_ignore = _get_files_to_ignore(stats)
+    files_to_ignore = _get_files_to_ignore(stats, yield_confirmation)
 
     for file_change in stats:
         if file_change.file_path in files_to_ignore:
@@ -186,10 +190,13 @@ def _get_stats(repo, branch):
     return files_changed
 
 
-def _get_files_to_ignore(stats):
+def _get_files_to_ignore(stats, yield_confirmation):
     '''
     Get the files that should be ignored from the stats
     '''
+
+    if yield_confirmation:
+        return []
 
     options = [Choice(stats.file_path, name=stats.desc) for stats in stats]
 
