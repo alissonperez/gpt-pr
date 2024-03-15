@@ -48,7 +48,7 @@ class PrData():
             f'{cc.bold("Repository")}: {cc.yellow(self.branch_info.owner)}/{cc.yellow(self.branch_info.repo)}',
             f'{cc.bold("Title")}: {cc.yellow(self.title)}',
             f'{cc.bold("Branch name")}: {cc.yellow(self.branch_info.branch)}',
-            f'{cc.bold("Base branch")}: {cc.yellow("main")}',
+            f'{cc.bold("Base branch")}: {cc.yellow(self.branch_info.base_branch)}',
             f'{cc.bold("PR Description")}:\n{self.body}',
         ])
 

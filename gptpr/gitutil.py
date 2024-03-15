@@ -10,6 +10,7 @@ from InquirerPy.base.control import Choice
 class BranchInfo:
     owner: str
     repo: str
+    base_branch: str
     branch: str
     commits: list
     highlight_commits: list
@@ -70,10 +71,11 @@ def get_branch_info(base_branch, yield_confirmation):
     return BranchInfo(
         owner=owner,
         repo=repo_name,
+        base_branch=base_branch,
         branch=current_branch.name,
         commits=commits,
         highlight_commits=highlight_commits,
-        diff=_get_diff_changes(repo, current_branch.name, yield_confirmation)
+        diff=_get_diff_changes(repo, base_branch, current_branch.name, yield_confirmation)
     )
 
 
@@ -85,7 +87,7 @@ def _branch_exists(repo, branch_name):
 
 
 def _get_diff_messages_against_base_branch(repo, branch, base_branch):
-    # Get commit messages that are in the current branch but not in the main branch
+    # Get commit messages that are in the current branch but not in the base branch
     commits_diff = list(repo.iter_commits(f'{base_branch}..{branch}'))
 
     return [commit.message.strip('\n') for commit in commits_diff]
@@ -147,33 +149,33 @@ def _extract_owner_and_repo(repo_url):
     return owner, '.'.join(repo_info.split('.')[:-1])
 
 
-def _get_diff_changes(repo, branch, yield_confirmation):
+def _get_diff_changes(repo, base_branch, branch, yield_confirmation):
     diff_changes = []
 
-    stats = _get_stats(repo, branch)
+    stats = _get_stats(repo, base_branch, branch)
     files_to_ignore = _get_files_to_ignore(stats, yield_confirmation)
 
     for file_change in stats:
         if file_change.file_path in files_to_ignore:
             continue
 
-        file_diff = repo.git.diff('main', branch, '--', file_change.file_path)
+        file_diff = repo.git.diff(base_branch, branch, '--', file_change.file_path)
 
         diff_changes.append(file_diff)
 
     return '\n'.join(diff_changes)
 
 
-def _get_stats(repo, branch):
+def _get_stats(repo, base_branch, branch):
     '''
-    Get the stats of the difference between the current branch and the main branch
+    Get the stats of the difference between the current branch and the base branch
     '''
 
     # returns:
     # 4       0       README.md
     # 2       0       application/aggregator/aggregator.go
     # 0       257     go.sum
-    diff_index = repo.git.diff('main', branch, '--numstat')
+    diff_index = repo.git.diff(base_branch, branch, '--numstat')
 
     files_changed = []
     for line in diff_index.split('\n'):

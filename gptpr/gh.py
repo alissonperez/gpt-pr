@@ -21,7 +21,7 @@ def create_pr(pr_data, yield_confirmation):
 
     if pr_confirmation:
         pr = repo.create_pull(title=pr_data.title, body=pr_data.body,
-                              head=pr_data.branch_info.branch, base='main')
+                              head=pr_data.branch_info.branch, base=pr_data.branch_info.base_branch)
         print("Pull request created successfully: ", pr.html_url)
     else:
         print('cancelling...')
