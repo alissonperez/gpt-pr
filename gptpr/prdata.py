@@ -4,6 +4,7 @@ import os
 from openai import OpenAI
 
 from gptpr.gitutil import BranchInfo
+from gptpr.config import config
 import gptpr.consolecolor as cc
 
 TOKENIZER_RATIO = 4
@@ -35,6 +36,21 @@ def _get_pr_template():
         print('PR template not found in .github dir. Using default template.')
 
     return pr_template
+
+
+def _get_open_ai_key():
+    api_key = None
+
+    if config.get_user_config_as_bool('OPENAI_API_KEY_FROM_ENV'):
+        api_key = os.environ.get('OPENAI_API_KEY')
+    else:
+        api_key = config.get_user_config('OPENAI_API_KEY')
+
+    if not api_key:
+        print('Please set OPENAI_API_KEY environment variable or config at {config.get_filepath()}.')
+        exit(1)
+
+    return api_key
 
 
 @dataclass
@@ -108,17 +124,14 @@ def get_pr_data(branch_info):
     else:
         messages.append({'role': 'user', 'content': 'Diff changes:\n' + branch_info.diff})
 
-    openai_api_key = os.environ.get('OPENAI_API_KEY')
+    client = OpenAI(api_key=_get_open_ai_key())
 
-    if not openai_api_key:
-        print("Please set OPENAI_API_KEY environment variable.")
-        exit(1)
-
-    client = OpenAI(api_key=openai_api_key)
+    openai_model = config.get_user_config('OPENAI_MODEL')
+    print('Using OpenAI model:', cc.yellow(openai_model))
 
     chat_completion = client.chat.completions.create(
         messages=messages,
-        model='gpt-4-0613',
+        model=openai_model,
         functions=functions,
         function_call={'name': 'create_pr'},
         temperature=0,

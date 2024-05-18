@@ -1,0 +1,83 @@
+from copy import deepcopy
+import configparser
+import os
+
+
+class Config:
+
+    config_filename = '.gpt-pr.ini'
+
+    default_config = {
+        # Open AI info
+        'OPENAI_MODEL': 'gpt-4o',
+        'OPENAI_API_KEY': '',
+        'OPENAI_API_KEY_FROM_ENV': 'true',
+    }
+
+    def __init__(self, config_dir=None):
+        self._config_dir = config_dir or os.path.expanduser('~')
+        self._config = configparser.ConfigParser()
+        self._initialized = False
+
+    def load(self):
+        if self._initialized:
+            return
+
+        config_file_path = self.get_filepath()
+
+        if os.path.exists(config_file_path):
+            self._config.read(config_file_path)
+        else:
+            self._config['user'] = {}
+            self._config['DEFAULT'] = deepcopy(self.default_config)
+            self.persist()
+
+        self._initialized = True
+
+    def exists_config(self):
+        return os.path.exists(self.get_filepath())
+
+    def persist(self):
+        config_file_path = self.get_filepath()
+
+        with open(config_file_path, 'w') as configfile:
+            self._config.write(configfile)
+
+    def get_filepath(self):
+        return os.path.join(self._config_dir, self.config_filename)
+
+    def set_user_config(self, name, value):
+        self.load()
+        self._config['user'][name] = value
+
+    def reset_user_config(self, name):
+        self.load()
+        self._config['user'][name] = self.default_config[name]
+        self.persist()
+
+    def get_user_config(self, name):
+        self.load()
+        return self._config['user'][name]
+
+    def get_user_config_as_bool(self, name):
+        self.load()
+        return self._config['user'].getboolean(name)
+
+    def all_values(self):
+        self.load()
+
+        # iterate over all sections and values and return them in a list
+        result = []
+
+        # add default section
+        for option in self._config['DEFAULT']:
+            result.append(('DEFAULT', option, self._config['DEFAULT'][option]))
+
+        for section in self._config.sections():
+            for option in self._config[section]:
+                result.append((section, option, self._config[section][option]))
+
+        return result
+
+
+config = Config()
