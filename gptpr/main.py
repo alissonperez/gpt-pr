@@ -7,6 +7,7 @@ from gptpr.prdata import get_pr_data
 from gptpr.version import __version__
 from gptpr.config import config, config_command_example, CONFIG_README_SECTION
 from gptpr import consolecolor as cc
+from gptpr.checkversion import check_for_updates
 
 
 def run(base_branch='main', yield_confirmation=False, version=False):
@@ -81,10 +82,14 @@ def print_config():
 
 
 def main():
+    check_for_updates()
+
     fire.Fire(run)
 
 
 def run_config():
+    check_for_updates()
+
     fire.Fire({
         'set': set_config,
         'get': get_config,
