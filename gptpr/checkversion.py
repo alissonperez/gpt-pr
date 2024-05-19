@@ -24,7 +24,8 @@ def cache_daily_version(func):
             if datetime.now() - last_checked < CACHE_DURATION:
                 # Use cached version info
                 latest_version = cache.get('latest_version')
-                return latest_version
+                if latest_version:
+                    return latest_version
 
         latest_version = func(*args, **kwargs)
         cache = {
