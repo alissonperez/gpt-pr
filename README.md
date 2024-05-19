@@ -138,6 +138,20 @@ To print all default configs and what is being used, just run:
 gpt-pr-config print
 ```
 
+### Reset config
+
+To reset any config to default value, just run:
+
+```bash
+gpt-pr-config reset config-name
+```
+
+Example:
+
+```bash
+gpt-pr-config reset openai_model
+```
+
 ## Usage
 
 ### Generating Github Pull Requests
