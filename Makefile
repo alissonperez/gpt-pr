@@ -22,3 +22,6 @@ publish: build
 
 lint:
 	pipenv run flake8 .
+
+test:
+	pipenv run pytest -vv .

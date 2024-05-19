@@ -39,7 +39,10 @@ setup(name='gpt-pr',
       author_email='alissonperez@outlook.com',
       license='MIT',
       entry_points={
-          'console_scripts': ['gpt-pr=gptpr.main:main'],
+          'console_scripts': [
+              'gpt-pr=gptpr.main:main',
+              'gpt-pr-config=gptpr.main:run_config',
+          ],
       },
       packages=find_packages('.'),
       include_package_data=True,

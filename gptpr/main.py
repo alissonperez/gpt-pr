@@ -5,6 +5,8 @@ from gptpr.gitutil import get_branch_info
 from gptpr.gh import create_pr
 from gptpr.prdata import get_pr_data
 from gptpr.version import __version__
+from gptpr.config import config, config_command_example, CONFIG_README_SECTION
+from gptpr import consolecolor as cc
 
 
 def run(base_branch='main', yield_confirmation=False, version=False):
@@ -44,8 +46,51 @@ def run(base_branch='main', yield_confirmation=False, version=False):
     create_pr(pr_data, yield_confirmation)
 
 
+def set_config(name, value):
+    name = name.upper()
+    config.set_user_config(name, value)
+    config.persist()
+
+    print('Config value', cc.bold(name), 'set to', cc.yellow(value))
+
+
+def get_config(name):
+    upper_name = name.upper()
+    print('Config value', cc.bold(name), '=', cc.yellow(config.get_user_config(upper_name)))
+
+
+def reset_config(name):
+    upper_name = name.upper()
+    config.reset_user_config(upper_name)
+    print('Config value', cc.bold(name), '=', cc.yellow(config.get_user_config(upper_name)))
+
+
+def print_config():
+    print('Config values at', cc.yellow(config.get_filepath()))
+    print('')
+    print('To set values, just run:', cc.yellow(config_command_example('[config name]', '[value]')))
+    print('More about at', cc.yellow(CONFIG_README_SECTION))
+    print('')
+    current_section = None
+    for section, option, value in config.all_values():
+        if current_section != section:
+            print('')
+            current_section = section
+
+        print(f'[{cc.bold(section)}]', option, '=', cc.yellow(value))
+
+
 def main():
     fire.Fire(run)
+
+
+def run_config():
+    fire.Fire({
+        'set': set_config,
+        'get': get_config,
+        'print': print_config,
+        'reset': reset_config
+    })
 
 
 if __name__ == '__main__':

@@ -8,8 +8,9 @@ GPT-PR is an open-source command-line tool designed to streamline your GitHub wo
 
 - [Features](#features)
 - [Prerequisites](#prerequisites)
-- [Installation and Usage](#installation-and-usage)
-- [Authentication & API Keys](#authentication--api-keys)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
 - [How to Contribute](#how-to-contribute)
 - [Roadmap](#roadmap)
 
@@ -40,7 +41,7 @@ pip install -U gpt-pr
 
 > Note: Use this command to **update** gpt-pr package to the latest version.
 
-2. Export API keys as environment variables ([Authentication & API Keys](#authentication--api-keys)).
+2. Setup API keys for GitHub and OpenAI, take a look at [Configuration](#configuration).
 
 3. Inside the Git repository you are working on, ensure you have pushed your branch to origin, then run:
 
@@ -63,12 +64,92 @@ cd gpt-pr
 pipenv install
 ```
 
-After exporting api keys as environment variables ([Authentication & API Keys](#authentication--api-keys)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
+After setting up API keys ([Configuration](#configuration)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
 
 ```bash
 PYTHONPATH=~/workplace/gpt-pr/gpt-pr \
 PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile \
 pipenv run python ~/workplace/gpt-pr/gptpr/main.py --help
+```
+
+## Configuration
+
+### Setting up GitHub Token (`GH_TOKEN`)
+
+GPT-PR tool will look for a `GH_TOKEN` in current shell env var OR in gpt-pr config file (at `~/.gpt-pr.ini`).
+
+To authenticate with GitHub, generate and export a GitHub Personal Access Token:
+
+1. Navigate to [GitHub's Personal Access Token page](https://github.com/settings/tokens).
+2. Click "Generate new token."
+3. Provide a description and select the required permissions `repo` for the token.
+4. Click "Generate token" at the bottom of the page.
+5. Copy the generated token.
+6. Set `gh_token` config running (supposing your gh token is `ghp_4Mb1QEr9gY5e8Lk3tN1KjPzX7W9z2V4HtJ2b`):
+
+```bash
+gpt-pr-config set gh_token ghp_4Mb1QEr9gY5e8Lk3tN1KjPzX7W9z2V4HtJ2b
+```
+
+Or just export it as an environment variable in your shell initializer:
+
+```bash
+export GH_TOKEN=your_generated_token_here
+```
+
+### Setting up OpenAI API Key (`OPENAI_API_KEY`)
+
+GPT-PR tool will look for a `OPENAI_API_KEY` env var in current shell OR in gpt-pr config file (at `~/.gpt-pr.ini`).
+
+This project needs to interact with the ChatGPT API to generate the pull request description. So, you need to generate and export an OpenAI API Key:
+
+1. Navigate to [OpenAI's API Key page](https://platform.openai.com/signup).
+2. If you don't have an account, sign up and log in.
+3. Go to the API Keys section and click "Create new key."
+4. Provide a description and click "Create."
+5. Copy the generated API key.
+6. Set `openai_api_key` config running (supposing your openai_api_key is `QEr9gY5e8Lk3tN1KjPzX7W9z2V4Ht`):
+
+```bash
+gpt-pr-config set openai_api_key QEr9gY5e8Lk3tN1KjPzX7W9z2V4Ht
+```
+
+Or just export it as an environment variable in your shell initializer:
+
+```bash
+export OPENAI_API_KEY=your_generated_api_key_here
+```
+
+### Change OpenAI model
+
+To change OpenAI model, just run:
+
+```bash
+gpt-pr-config set openai_model gpt-3.5-turbo
+```
+
+To see a full list of available models, access [OpenAI Models Documentation](https://platform.openai.com/docs/models)
+
+### See all configs available
+
+To print all default configs and what is being used, just run:
+
+```bash
+gpt-pr-config print
+```
+
+### Reset config
+
+To reset any config to default value, just run:
+
+```bash
+gpt-pr-config reset config-name
+```
+
+Example:
+
+```bash
+gpt-pr-config reset openai_model
 ```
 
 ## Usage
@@ -93,38 +174,6 @@ To show help commands:
 
 ```
 gpt-pr -h
-```
-
-## Authentication & API Keys
-
-### Setting up GitHub Token (`GH_TOKEN`)
-
-To authenticate with GitHub, generate and export a GitHub Personal Access Token:
-
-1. Navigate to [GitHub's Personal Access Token page](https://github.com/settings/tokens).
-2. Click "Generate new token."
-3. Provide a description and select the required permissions `repo` for the token.
-4. Click "Generate token" at the bottom of the page.
-5. Copy the generated token.
-6. Export it as an environment variable:
-
-```bash
-export GH_TOKEN=your_generated_token_here
-```
-
-### Setting up OpenAI API Key (`OPENAI_API_KEY`)
-
-This project needs to interact with the ChatGPT API to generate the pull request description. So, you need to generate and export an OpenAI API Key:
-
-1. Navigate to [OpenAI's API Key page](https://platform.openai.com/signup).
-2. If you don't have an account, sign up and log in.
-3. Go to the API Keys section and click "Create new key."
-4. Provide a description and click "Create."
-5. Copy the generated API key.
-6. Export it as an environment variable:
-
-```bash
-export OPENAI_API_KEY=your_generated_api_key_here
 ```
 
 Output:
