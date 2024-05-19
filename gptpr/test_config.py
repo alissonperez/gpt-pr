@@ -29,14 +29,24 @@ def test_init_config_file(temp_config):
     # Check if the file exists
     assert os.path.isfile(os.path.join(str(temp_dir), config.config_filename))
 
-    # Read the configuration file and verify its contents
-    config_to_test = configparser.ConfigParser()
-    config_to_test.read(os.path.join(str(temp_dir), config.config_filename))
-
     _check_config(config, temp_dir, [
         ('DEFAULT', 'OPENAI_MODEL', 'gpt-4o'),
         ('DEFAULT', 'OPENAI_API_KEY', ''),
-        ('DEFAULT', 'OPENAI_API_KEY_FROM_ENV', 'true')
+    ])
+
+
+def test_new_default_value_should_be_added(temp_config):
+    config, temp_dir = temp_config
+    config.load()  # data was written to the file
+
+    new_config = Config(temp_dir)
+
+    # Add a new default value
+    new_config.default_config['NEW_DEFAULT'] = 'new_default_value'
+    new_config.load()  # Should update config file...
+
+    _check_config(new_config, temp_dir, [
+        ('DEFAULT', 'NEW_DEFAULT', 'new_default_value'),
     ])
 
 

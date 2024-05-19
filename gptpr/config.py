@@ -7,7 +7,7 @@ class Config:
 
     config_filename = '.gpt-pr.ini'
 
-    default_config = {
+    _default_config = {
         # Open AI info
         'OPENAI_MODEL': 'gpt-4o',
         'OPENAI_API_KEY': '',
@@ -15,6 +15,7 @@ class Config:
     }
 
     def __init__(self, config_dir=None):
+        self.default_config = deepcopy(self._default_config)
         self._config_dir = config_dir or os.path.expanduser('~')
         self._config = configparser.ConfigParser()
         self._initialized = False
@@ -27,6 +28,7 @@ class Config:
 
         if os.path.exists(config_file_path):
             self._config.read(config_file_path)
+            self._ensure_default_values()
         else:
             self._config['user'] = {}
             self._config['DEFAULT'] = deepcopy(self.default_config)
@@ -34,8 +36,15 @@ class Config:
 
         self._initialized = True
 
-    def exists_config(self):
-        return os.path.exists(self.get_filepath())
+    def _ensure_default_values(self):
+        added = False
+        for key, value in self.default_config.items():
+            if key not in self._config['DEFAULT']:
+                self._config['DEFAULT'][key] = value
+                added = True
+
+        if added:
+            self.persist()
 
     def persist(self):
         config_file_path = self.get_filepath()
