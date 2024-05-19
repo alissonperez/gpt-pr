@@ -4,9 +4,10 @@ import json
 from datetime import datetime
 from unittest.mock import patch, mock_open
 
+from gptpr.version import __version__
 from gptpr.checkversion import (get_latest_version, load_cache,
                                 save_cache, check_for_updates,
-                                CACHE_DURATION, CURRENT_VERSION)
+                                CACHE_DURATION)
 
 
 @pytest.fixture
@@ -98,10 +99,10 @@ def test_check_for_updates_no_new_version(mocker, mock_datetime, mock_requests_g
     mock_datetime.fromisoformat.return_value = datetime.fromisoformat(last_checked_str)
     mock_open_file.return_value.read.return_value = json.dumps({
         'last_checked': (datetime(2024, 1, 1) - CACHE_DURATION).isoformat(),
-        'latest_version': CURRENT_VERSION
+        'latest_version': __version__
     })
     mock_requests_get.return_value.raise_for_status.return_value = None
-    mock_requests_get.return_value.json.return_value = {'info': {'version': CURRENT_VERSION}}
+    mock_requests_get.return_value.json.return_value = {'info': {'version': __version__}}
 
     # Capture the print statements
     with patch('builtins.print') as mocked_print:
@@ -111,16 +112,15 @@ def test_check_for_updates_no_new_version(mocker, mock_datetime, mock_requests_g
 
 def test_check_for_updates_cache_valid(mock_datetime, mock_open_file):
     # Set up mocks
-    last_checked_str = datetime(2024, 1, 1).isoformat()
+    last_checked_str = datetime(2024, 1, 2).isoformat()
     mock_datetime.now.return_value = datetime(2024, 1, 2)
     mock_datetime.fromisoformat.return_value = datetime.fromisoformat(last_checked_str)
     mock_open_file.return_value.read.return_value = json.dumps({
         'last_checked': last_checked_str,
-        'latest_version': '1.0.0'
+        'latest_version': __version__
     })
 
     # Capture the print statements
     with patch('builtins.print') as mocked_print:
         check_for_updates()
-
         assert mocked_print.call_count == 0

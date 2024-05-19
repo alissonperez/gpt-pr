@@ -1,15 +1,14 @@
 import requests
-import pkg_resources
 import os
 import json
 import tempfile
+from gptpr.version import __version__
 from datetime import datetime, timedelta
 
 from gptpr import consolecolor as cc
 
 
 PACKAGE_NAME = 'gpt-pr'
-CURRENT_VERSION = pkg_resources.get_distribution(PACKAGE_NAME).version
 CACHE_FILE = os.path.join(os.path.expanduser("~"), '.gpt_pr_update_cache.json')
 CACHE_DURATION = timedelta(days=1)
 
@@ -76,11 +75,11 @@ def save_cache(data):
 def check_for_updates():
     latest_version = get_latest_version()
 
-    if latest_version and latest_version != CURRENT_VERSION:
+    if latest_version and latest_version != __version__:
         print('')
         print(cc.yellow(
             f'A new version of {PACKAGE_NAME} is available ({latest_version}). '
-            f'You are using version {CURRENT_VERSION}. Please update by running'),
+            f'You are using version {__version__}. Please update by running'),
             cc.green(f'pip install --upgrade {PACKAGE_NAME}.'))
         print('')
 
