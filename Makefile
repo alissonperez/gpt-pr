@@ -24,4 +24,4 @@ lint:
 	pipenv run flake8 .
 
 test:
-	pipenv run pytest -v .
+	pipenv run pytest -vv .
