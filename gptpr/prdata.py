@@ -39,15 +39,14 @@ def _get_pr_template():
 
 
 def _get_open_ai_key():
-    api_key = None
-
-    if config.get_user_config_as_bool('OPENAI_API_KEY_FROM_ENV'):
-        api_key = os.environ.get('OPENAI_API_KEY')
-    else:
-        api_key = config.get_user_config('OPENAI_API_KEY')
+    api_key = config.get_user_config('OPENAI_API_KEY')
 
     if not api_key:
-        print('Please set OPENAI_API_KEY environment variable or config at {config.get_filepath()}.')
+        api_key = os.environ.get('OPENAI_API_KEY')
+
+    if not api_key:
+        print('Please set "openai_api_key" config, just run:',
+              cc.yellow('gpt-pr-config set openai_api_key [open ai key]'))
         exit(1)
 
     return api_key
