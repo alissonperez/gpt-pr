@@ -3,15 +3,24 @@ import configparser
 import os
 
 
+def config_command_example(name, value_sample):
+    return f'gpt-pr-config set {name} {value_sample}'
+
+
+CONFIG_README_SECTION = 'https://github.com/alissonperez/gpt-pr?tab=readme-ov-file#authentication--api-keys'
+
+
 class Config:
 
     config_filename = '.gpt-pr.ini'
 
     _default_config = {
+        # Github
+        'GH_TOKEN': '',
+
         # Open AI info
         'OPENAI_MODEL': 'gpt-4o',
         'OPENAI_API_KEY': '',
-        'OPENAI_API_KEY_FROM_ENV': 'true',
     }
 
     def __init__(self, config_dir=None):
@@ -67,10 +76,6 @@ class Config:
     def get_user_config(self, name):
         self.load()
         return self._config['user'][name]
-
-    def get_user_config_as_bool(self, name):
-        self.load()
-        return self._config['user'].getboolean(name)
 
     def all_values(self):
         self.load()

@@ -63,18 +63,7 @@ def test_set_user_config(temp_config):
     _check_config(config, temp_dir, [
         ('user', 'OPENAI_MODEL', 'gpt-3.5'),
         ('user', 'OPENAI_API_KEY', ''),
-        ('user', 'OPENAI_API_KEY_FROM_ENV', 'true'),
     ])
-
-
-def test_get_user_config_as_bool(temp_config):
-    config, temp_dir = temp_config
-
-    assert config.get_user_config_as_bool('OPENAI_API_KEY_FROM_ENV') is True
-
-    config.set_user_config('OPENAI_API_KEY_FROM_ENV', 'false')
-
-    assert config.get_user_config_as_bool('OPENAI_API_KEY_FROM_ENV') is False
 
 
 def test_all_values(temp_config):
@@ -83,12 +72,12 @@ def test_all_values(temp_config):
     all_values = config.all_values()
 
     assert all_values == [
+        ('DEFAULT', 'gh_token', ''),
         ('DEFAULT', 'openai_model', 'gpt-4o'),
         ('DEFAULT', 'openai_api_key', ''),
-        ('DEFAULT', 'openai_api_key_from_env', 'true'),
+        ('user', 'gh_token', ''),
         ('user', 'openai_model', 'gpt-4o'),
         ('user', 'openai_api_key', ''),
-        ('user', 'openai_api_key_from_env', 'true')
     ]
 
 
@@ -107,5 +96,4 @@ def test_reset_user_config(temp_config):
     _check_config(config, temp_dir, [
         ('user', 'OPENAI_MODEL', 'gpt-4o'),
         ('user', 'OPENAI_API_KEY', ''),
-        ('user', 'OPENAI_API_KEY_FROM_ENV', 'true'),
     ])
