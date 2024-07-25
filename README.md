@@ -33,13 +33,11 @@ You can install and use GPT-PR in one of two ways. Choose the option that best s
 
 ### Option 1: Using `pip install` (Recommended)
 
-1. Install the package:
+1. Install OR Update the package:
 
 ```bash
 pip install -U gpt-pr
 ```
-
-> Note: Use this command to **update** gpt-pr package to the latest version.
 
 2. Setup API keys for GitHub and OpenAI, take a look at [Configuration](#configuration).
 
@@ -49,7 +47,7 @@ pip install -U gpt-pr
 gpt-pr --help
 ```
 
-### Option 2: Cloning the code
+### Option 2: Cloning the code (NOT recommended)
 
 1. Clone the repository:
 
@@ -73,6 +71,14 @@ pipenv run python ~/workplace/gpt-pr/gptpr/main.py --help
 ```
 
 ## Configuration
+
+### See all configs available
+
+To print all default configs and what is being used, just run:
+
+```bash
+gpt-pr-config print
+```
 
 ### Setting up GitHub Token (`GH_TOKEN`)
 
@@ -125,18 +131,12 @@ export OPENAI_API_KEY=your_generated_api_key_here
 To change OpenAI model, just run:
 
 ```bash
-gpt-pr-config set openai_model gpt-3.5-turbo
+gpt-pr-config set openai_model gpt-4o-mini
 ```
+
+> Obs.: `gpt-4o-mini` already is the default model of the project
 
 To see a full list of available models, access [OpenAI Models Documentation](https://platform.openai.com/docs/models)
-
-### See all configs available
-
-To print all default configs and what is being used, just run:
-
-```bash
-gpt-pr-config print
-```
 
 ### Reset config
 

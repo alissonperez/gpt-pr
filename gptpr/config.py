@@ -22,7 +22,7 @@ class Config:
         'INPUT_MAX_TOKENS': '15000',
 
         # Open AI info
-        'OPENAI_MODEL': 'gpt-4o',
+        'OPENAI_MODEL': 'gpt-4o-mini',
         'OPENAI_API_KEY': '',
     }
 
