@@ -126,6 +126,16 @@ Or just export it as an environment variable in your shell initializer:
 export OPENAI_API_KEY=your_generated_api_key_here
 ```
 
+### Setting Max Input LLM Tokens
+
+You can adjust the maximum number of input tokens allowed when calling the LLM model by modifying the corresponding setting.
+
+For example, to change the maximum to 20,000 tokens, use the following command:
+
+```bash
+gpt-pr-config set input_max_tokens 20000
+```
+
 ### Change OpenAI model
 
 To change OpenAI model, just run:
@@ -153,7 +163,7 @@ gpt-pr-config set add_tool_signature false
 To reset any config to default value, just run:
 
 ```bash
-gpt-pr-config reset config-name
+gpt-pr-config reset config_name
 ```
 
 Example:
