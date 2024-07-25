@@ -18,6 +18,9 @@ class Config:
         # Github
         'GH_TOKEN': '',
 
+        # LLM input MAX Tokens
+        'INPUT_MAX_TOKENS': '15000',
+
         # Open AI info
         'OPENAI_MODEL': 'gpt-4o',
         'OPENAI_API_KEY': '',

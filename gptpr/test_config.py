@@ -73,9 +73,11 @@ def test_all_values(temp_config):
 
     assert all_values == [
         ('DEFAULT', 'gh_token', ''),
+        ('DEFAULT', 'input_max_tokens', '15000'),
         ('DEFAULT', 'openai_model', 'gpt-4o'),
         ('DEFAULT', 'openai_api_key', ''),
         ('user', 'gh_token', ''),
+        ('user', 'input_max_tokens', '15000'),
         ('user', 'openai_model', 'gpt-4o'),
         ('user', 'openai_api_key', ''),
     ]
