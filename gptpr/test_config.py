@@ -87,10 +87,12 @@ def test_all_values(temp_config):
     all_values = config.all_values()
 
     assert all_values == [
+        ('DEFAULT', 'add_tool_signature', 'true'),
         ('DEFAULT', 'gh_token', ''),
         ('DEFAULT', 'input_max_tokens', '15000'),
         ('DEFAULT', 'openai_model', 'gpt-4o-mini'),
         ('DEFAULT', 'openai_api_key', ''),
+        ('user', 'add_tool_signature', 'true'),
         ('user', 'gh_token', ''),
         ('user', 'input_max_tokens', '15000'),
         ('user', 'openai_model', 'gpt-4o-mini'),
