@@ -7,7 +7,7 @@ def config_command_example(name, value_sample):
     return f'gpt-pr-config set {name} {value_sample}'
 
 
-CONFIG_README_SECTION = 'https://github.com/alissonperez/gpt-pr?tab=readme-ov-file#authentication--api-keys'
+CONFIG_README_SECTION = 'https://github.com/alissonperez/gpt-pr?tab=readme-ov-file#configuration'
 
 
 class Config:
