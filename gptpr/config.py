@@ -7,7 +7,8 @@ def config_command_example(name, value_sample):
     return f'gpt-pr-config set {name} {value_sample}'
 
 
-CONFIG_README_SECTION = 'https://github.com/alissonperez/gpt-pr?tab=readme-ov-file#configuration'
+CONFIG_PROJECT_REPO_URL = 'https://github.com/alissonperez/gpt-pr'
+CONFIG_README_SECTION = f'{CONFIG_PROJECT_REPO_URL}?tab=readme-ov-file#configuration'
 
 
 class Config:
@@ -15,6 +16,9 @@ class Config:
     config_filename = '.gpt-pr.ini'
 
     _default_config = {
+        # Amenities
+        'ADD_TOOL_SIGNATURE': 'true',  # Add GPT-PR signature to PRs
+
         # Github
         'GH_TOKEN': '',
 
