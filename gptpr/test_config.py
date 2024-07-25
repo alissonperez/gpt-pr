@@ -30,7 +30,7 @@ def test_init_config_file(temp_config):
     assert os.path.isfile(os.path.join(str(temp_dir), config.config_filename))
 
     _check_config(config, temp_dir, [
-        ('DEFAULT', 'OPENAI_MODEL', 'gpt-4o'),
+        ('DEFAULT', 'OPENAI_MODEL', 'gpt-4o-mini'),
         ('DEFAULT', 'OPENAI_API_KEY', ''),
     ])
 
@@ -89,11 +89,11 @@ def test_all_values(temp_config):
     assert all_values == [
         ('DEFAULT', 'gh_token', ''),
         ('DEFAULT', 'input_max_tokens', '15000'),
-        ('DEFAULT', 'openai_model', 'gpt-4o'),
+        ('DEFAULT', 'openai_model', 'gpt-4o-mini'),
         ('DEFAULT', 'openai_api_key', ''),
         ('user', 'gh_token', ''),
         ('user', 'input_max_tokens', '15000'),
-        ('user', 'openai_model', 'gpt-4o'),
+        ('user', 'openai_model', 'gpt-4o-mini'),
         ('user', 'openai_api_key', ''),
     ]
 
@@ -111,6 +111,6 @@ def test_reset_user_config(temp_config):
     config_to_test.read(os.path.join(str(temp_dir), config.config_filename))
 
     _check_config(config, temp_dir, [
-        ('user', 'OPENAI_MODEL', 'gpt-4o'),
+        ('user', 'OPENAI_MODEL', 'gpt-4o-mini'),
         ('user', 'OPENAI_API_KEY', ''),
     ])
