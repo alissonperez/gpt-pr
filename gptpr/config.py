@@ -69,7 +69,7 @@ class Config:
 
     def set_user_config(self, name, value):
         self.load()
-        self._config['user'][name] = value
+        self._config['user'][name] = str(value)
 
     def reset_user_config(self, name):
         self.load()
