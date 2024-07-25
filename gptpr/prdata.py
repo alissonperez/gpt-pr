@@ -8,7 +8,6 @@ from gptpr.config import config
 import gptpr.consolecolor as cc
 
 TOKENIZER_RATIO = 4
-MAX_TOKENS = 6000
 
 DEFAULT_PR_TEMPLATE = ('### Ref. [Link]\n\n## What was done?\n[Fill here]\n\n'
                        '## How was it done?\n[Fill here]\n\n'
@@ -52,6 +51,10 @@ def _get_open_ai_key():
     return api_key
 
 
+def _count_tokens(text):
+    return len(text.split(' '))
+
+
 @dataclass
 class PrData():
     branch_info: BranchInfo
@@ -91,6 +94,35 @@ functions = [
 
 
 def get_pr_data(branch_info):
+    client = OpenAI(api_key=_get_open_ai_key())
+
+    messages = _get_messages(branch_info)
+
+    openai_model = config.get_user_config('OPENAI_MODEL')
+    print('Using OpenAI model:', cc.yellow(openai_model))
+
+    chat_completion = client.chat.completions.create(
+        messages=messages,
+        model=openai_model,
+        functions=functions,
+        function_call={'name': 'create_pr'},
+        temperature=0,
+        max_tokens=1000,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    arguments = _parse_json(chat_completion.choices[0].message.function_call.arguments)
+
+    return PrData(
+        branch_info=branch_info,
+        title=arguments['title'],
+        body=arguments['description']
+    )
+
+
+def _get_messages(branch_info):
     system_content = ('You are a development assistant designed to craft Git pull requests '
                       'by incorporating information from main and secondary commits, diff changes, '
                       'and adhering to a provided PR template. Your output includes a complete PR '
@@ -108,45 +140,30 @@ def get_pr_data(branch_info):
         messages.append({'role': 'user', 'content': 'main commits: ' + '\n'.join(branch_info.highlight_commits)})
         messages.append({'role': 'user', 'content': 'secondary commits: ' + '\n'.join(branch_info.commits)})
     else:
-        messages.append({'role': 'user', 'content': 'git commits: ' + '\n'.join(branch_info.commits)})
+        messages.append({'role': 'user', 'content': 'git commits: \n' + '\n'.join(branch_info.commits)})
 
     messages.append({'role': 'user', 'content': 'PR template:\n' + _get_pr_template()})
 
-    current_total_length = sum([len(m['content']) for m in messages])
+    joined_messages = '\n'.join([m['content'] for m in messages])
+    current_total_tokens = _count_tokens(joined_messages)
 
-    if current_total_length / TOKENIZER_RATIO > MAX_TOKENS:
-        raise Exception(f'Current total length {current_total_length} is greater than max tokens {MAX_TOKENS}')
+    input_max_tokens = int(config.get_user_config('INPUT_MAX_TOKENS'))
 
-    total_length_with_diff = current_total_length + len(branch_info.diff)
-    if total_length_with_diff / TOKENIZER_RATIO > MAX_TOKENS:
-        print('Total content length (with diff) is too big.', cc.red('Skipping diff content...'))
+    if current_total_tokens > input_max_tokens:
+        exp_message = (f'Length of {current_total_tokens} tokens for basic prompt '
+                       f'(description and commits) is greater than max tokens {input_max_tokens} '
+                       '(config \'input_max_tokens\')')
+        raise Exception(exp_message)
+
+    total_tokens_with_diff = current_total_tokens + _count_tokens(branch_info.diff)
+    if total_tokens_with_diff > input_max_tokens:
+        print_msg = (f'Length git changes with diff is too big (total is {total_tokens_with_diff}, '
+                     f'\'input_max_tokens\' config is {input_max_tokens}).')
+        print(print_msg, cc.red('Skipping changes diff content...'))
     else:
         messages.append({'role': 'user', 'content': 'Diff changes:\n' + branch_info.diff})
 
-    client = OpenAI(api_key=_get_open_ai_key())
-
-    openai_model = config.get_user_config('OPENAI_MODEL')
-    print('Using OpenAI model:', cc.yellow(openai_model))
-
-    chat_completion = client.chat.completions.create(
-        messages=messages,
-        model=openai_model,
-        functions=functions,
-        function_call={'name': 'create_pr'},
-        temperature=0,
-        max_tokens=512,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-
-    arguments = _parse_json(chat_completion.choices[0].message.function_call.arguments)
-
-    return PrData(
-        branch_info=branch_info,
-        title=arguments['title'],
-        body=arguments['description']
-    )
+    return messages
 
 
 def _parse_json(content):

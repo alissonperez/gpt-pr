@@ -66,6 +66,21 @@ def test_set_user_config(temp_config):
     ])
 
 
+def test_set_user_config_with_int_value(temp_config):
+    config, temp_dir = temp_config
+
+    config.set_user_config('INPUT_MAX_TOKENS', 100)
+    config.persist()
+
+    # Read the configuration file and verify its contents
+    config_to_test = configparser.ConfigParser()
+    config_to_test.read(os.path.join(str(temp_dir), config.config_filename))
+
+    _check_config(config, temp_dir, [
+        ('user', 'INPUT_MAX_TOKENS', '100'),
+    ])
+
+
 def test_all_values(temp_config):
     config, temp_dir = temp_config
 
@@ -73,9 +88,11 @@ def test_all_values(temp_config):
 
     assert all_values == [
         ('DEFAULT', 'gh_token', ''),
+        ('DEFAULT', 'input_max_tokens', '15000'),
         ('DEFAULT', 'openai_model', 'gpt-4o'),
         ('DEFAULT', 'openai_api_key', ''),
         ('user', 'gh_token', ''),
+        ('user', 'input_max_tokens', '15000'),
         ('user', 'openai_model', 'gpt-4o'),
         ('user', 'openai_api_key', ''),
     ]
