@@ -157,7 +157,9 @@ def _get_messages(branch_info):
 
     total_tokens_with_diff = current_total_tokens + _count_tokens(branch_info.diff)
     if total_tokens_with_diff > input_max_tokens:
-        print(f'Length git changes with diff is too big (total is {total_tokens_with_diff}, \'input_max_tokens\' config is {input_max_tokens}).', cc.red('Skipping changes diff content...'))
+        print_msg = (f'Length git changes with diff is too big (total is {total_tokens_with_diff}, '
+                     f'\'input_max_tokens\' config is {input_max_tokens}).')
+        print(print_msg, cc.red('Skipping changes diff content...'))
     else:
         messages.append({'role': 'user', 'content': 'Diff changes:\n' + branch_info.diff})
 
