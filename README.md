@@ -14,6 +14,8 @@ For a more detailed explanation, see [Installation](#installation) and [Configur
 pip install -U gpt-pr
 ```
 
+If you don't have the `pip` command available, follow [these instructions](https://pip.pypa.io/en/stable/installation/) to install it on different platforms.
+
 ### 2. Fill OpenAI API Key
 
 1. Go to [OpenAI API Keys](https://platform.openai.com/api-keys) and generate a new key.
@@ -42,6 +44,20 @@ gpt-pr
 ```
 
 3. Answer the questions. At the end, you'll receive the URL of a freshly opened PR.
+
+## Contributing and Feedback
+
+We welcome your contributions and feedback to help improve GPT-PR! Here’s how you can get involved:
+
+### Open Issues
+
+- **Feature Requests**: Have an idea for a new feature? We’d love to hear it! Open an issue to request new features or enhancements.
+- **Bug Reports**: Encountered a bug? Let us know by opening an issue with detailed information so we can fix it.
+- **General Feedback**: Any other suggestions or feedback? Feel free to share your thoughts.
+
+To open an issue, go to the [Issues](https://github.com/your-repo/gpt-pr/issues) section of our GitHub repository. Your contributions are very welcome and highly appreciated!
+
+More details about it at our [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
 ## Table of Contents
 
@@ -237,10 +253,6 @@ gpt-pr -h
 
 Output:
 ![image](https://github.com/alissonperez/gpt-pr/assets/756802/cc6c0ca4-5759-44ce-ad35-e4e7305b3875)
-
-## How to contribute?
-
-Please follow our [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
 ## Roadmap
 

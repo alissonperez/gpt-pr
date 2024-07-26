@@ -2,6 +2,14 @@
 
 We're thrilled that you're interested in contributing to GPT-PR! Your contributions can help our project grow and improve. This guide will help you get started.
 
+## Open Issues
+
+- **Feature Requests**: Have an idea for a new feature? We’d love to hear it! Open an issue to request new features or enhancements.
+- **Bug Reports**: Encountered a bug? Let us know by opening an issue with detailed information so we can fix it.
+- **General Feedback**: Any other suggestions or feedback? Feel free to share your thoughts.
+
+To open an issue, go to the [Issues](https://github.com/your-repo/gpt-pr/issues) section of our GitHub repository. Your contributions are very welcome and highly appreciated!
+
 ## Getting Started
 
 ### 1. Fork the Project
