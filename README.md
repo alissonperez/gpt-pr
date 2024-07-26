@@ -4,6 +4,47 @@ GPT-PR is an open-source command-line tool designed to streamline your GitHub wo
 
 [![asciicast](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A.svg)](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A)
 
+## Quick Start
+
+For a more detailed explanation, see [Installation](#installation) and [Configuration](#configuration).
+
+### 1. Installation
+
+```bash
+pip install -U gpt-pr
+```
+
+If you don't have the `pip` command available, follow [these instructions](https://pip.pypa.io/en/stable/installation/) to install it on different platforms.
+
+### 2. Fill OpenAI API Key
+
+1. Go to [OpenAI API Keys](https://platform.openai.com/api-keys) and generate a new key.
+2. Run the following command to fill your key in GPT-PR (it will be stored in `~/.gpt-pr.ini`):
+
+```bash
+gpt-pr-config set openai_api_key MY-API-KEY-VALUE
+```
+
+### 3. Generate a GitHub GH Token to Open PRs
+
+1. Go to [GitHub Settings](https://github.com/settings/tokens), choose `Generate new token (classic)`, and select all permissions under `repo` (full control of private repositories).
+2. Run the following command to fill your GH token (it will also be stored in `~/.gpt-pr.ini`):
+
+```bash
+gpt-pr-config set gh_token MY-GH-TOKEN-VALUE
+```
+
+### 4. Ready to NEVER WRITE A PR AGAIN
+
+1. Make your changes, commit them, and push to origin (important!).
+2. Run the following command in your project directory:
+
+```bash
+gpt-pr
+```
+
+3. Answer the questions. At the end, you'll receive the URL of a freshly opened PR.
+
 ## Table of Contents
 
 - [Features](#features)
