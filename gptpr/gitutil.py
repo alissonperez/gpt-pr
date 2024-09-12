@@ -183,10 +183,15 @@ def _get_stats(repo, base_branch, branch):
             continue
 
         line = line.split('\t')
+
+        # Binary files will not have stats (just "-")
+        added = int(line[0]) if line[0] and line[0].isdigit() else 0
+        removed = int(line[1]) if line[1] and line[1].isdigit() else 0
+
         files_changed.append(FileChange(
             file_path=line[2],
-            lines_added=int(line[0]),
-            lines_removed=int(line[1])
+            lines_added=added,
+            lines_removed=removed
         ))
 
     return files_changed
