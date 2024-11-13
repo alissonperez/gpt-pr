@@ -32,7 +32,7 @@ class FileChange:
         return f'{self.file_path} (+{(self.lines_added)} -{self.lines_removed})'
 
 
-def get_branch_info(base_branch, yield_confirmation):
+def get_branch_info(base_branch, origin, yield_confirmation):
     # Get current directory
     current_dir = os.getcwd()
 
@@ -57,7 +57,7 @@ def get_branch_info(base_branch, yield_confirmation):
     if not _branch_exists(repo, base_branch):
         raise Exception(f'Base branch {base_branch} does not exist.')
 
-    owner, repo_name = _get_remote_info(repo)
+    owner, repo_name = _get_remote_info(repo, origin)
 
     commits = _get_diff_messages_against_base_branch(repo, current_branch.name, base_branch)
     commits = _get_valid_commits(commits, yield_confirmation)
@@ -125,9 +125,9 @@ def _get_highlight_commits(commits, yield_confirmation):
     return highlight_commits
 
 
-def _get_remote_info(repo):
+def _get_remote_info(repo, origin):
     for remote in repo.remotes:
-        if remote.name != 'origin':
+        if remote.name != origin:
             continue
 
         remote_urls_joined = ','.join([str(url) for url in remote.urls])
@@ -137,7 +137,7 @@ def _get_remote_info(repo):
         for url in remote.urls:
             return _extract_owner_and_repo(url)
 
-    raise Exception('Could not find origin remote.')
+    raise Exception(f'Could not find \'{origin}\' remote.')
 
 
 def _extract_owner_and_repo(repo_url):

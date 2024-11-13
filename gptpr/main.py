@@ -10,7 +10,7 @@ from gptpr import consolecolor as cc
 from gptpr.checkversion import check_for_updates
 
 
-def run(base_branch='main', yield_confirmation=False, version=False):
+def run(base_branch='main', origin='origin', yield_confirmation=False, version=False):
     '''
     Create Pull Requests from current branch with base branch (default 'main' branch)
     '''
@@ -19,7 +19,7 @@ def run(base_branch='main', yield_confirmation=False, version=False):
         print('Current version:', __version__)
         return
 
-    branch_info = get_branch_info(base_branch, yield_confirmation)
+    branch_info = get_branch_info(base_branch, origin, yield_confirmation)
 
     if not branch_info:
         exit(0)
