@@ -6,6 +6,10 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11, 3.12]
+
     steps:
     - name: Check out code
       uses: actions/checkout@v2
@@ -13,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: ${{ matrix.python-version }}
 
     - name: Install pipenv
       run: |
@@ -28,6 +32,10 @@ jobs:
 
   pytest:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11, 3.12]
+
     steps:
     - name: Check out code
       uses: actions/checkout@v2
@@ -35,7 +43,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: ${{ matrix.python-version }}
 
     - name: Install pipenv
       run: |
@@ -45,5 +53,5 @@ jobs:
     - name: Install dependencies using pipenv
       run: pipenv install --dev
 
-    - name: Run Flake8 using pipenv
+    - name: Run pytest using pipenv
       run: pipenv run pytest
