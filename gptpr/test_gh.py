@@ -1,6 +1,6 @@
-import pytest
 from types import SimpleNamespace
 import gptpr.gh as gh_module
+
 
 def test_create_pr_success(mocker, capsys):
     fake_repo = mocker.Mock()
@@ -26,6 +26,7 @@ def test_create_pr_success(mocker, capsys):
     assert "Pull request created successfully" in captured.out
     assert "http://fake.url" in captured.out
 
+
 def test_create_pr_cancel(mocker, capsys):
     fake_repo = mocker.Mock()
     fake_gh = SimpleNamespace()
@@ -35,6 +36,7 @@ def test_create_pr_cancel(mocker, capsys):
     class FakePrompt:
         def __init__(self, *args, **kwargs):
             pass
+
         def execute(self):
             return False
 
@@ -50,4 +52,5 @@ def test_create_pr_cancel(mocker, capsys):
 
     fake_repo.create_pull.assert_not_called()
     captured = capsys.readouterr()
+
     assert "cancelling..." in captured.out
