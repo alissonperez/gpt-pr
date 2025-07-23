@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-gitpython = "3.1.42"
-openai = "1.14.0"
-pygithub = "2.2.0"
-prompt-toolkit = "3.0.43"
-inquirerpy = "0.3.4"
-fire = "0.6.0"
-requests = "2.31.0"
+gitpython = "==3.1.44"
+openai = "==1.39.0"
+pygithub = "==2.3.0"
+prompt-toolkit = "==3.0.48"
+inquirerpy = "==0.3.4"
+fire = "==0.7.0"
+requests = "==2.31.0"
 
 [dev-packages]
 flake8 = "5.0.4"
@@ -19,4 +19,4 @@ pytest = "7.4.4"
 pytest-mock = "3.11.1"
 
 [requires]
-python_version = "3.7"
+python_version = ">3.7"
