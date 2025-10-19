@@ -9,7 +9,6 @@ def test_create_pr_success(mocker, capsys):
 
     fake_gh = SimpleNamespace()
     fake_gh.get_repo = lambda repo_name: fake_repo
-    mocker.patch.object(gh_module, "gh", fake_gh)
 
     branch_info = SimpleNamespace(
         owner="owner", repo="repo", branch="feature-branch", base_branch="main"
@@ -18,7 +17,7 @@ def test_create_pr_success(mocker, capsys):
         title="Test PR", branch_info=branch_info, create_body=lambda: "My body"
     )
 
-    gh_module.create_pr(pr_data, yield_confirmation=True)
+    gh_module.create_pr(pr_data, yield_confirmation=True, gh=fake_gh)
 
     fake_repo.create_pull.assert_called_once_with(
         title="Test PR", body="My body", head="feature-branch", base="main"
@@ -32,7 +31,6 @@ def test_create_pr_cancel(mocker, capsys):
     fake_repo = mocker.Mock()
     fake_gh = SimpleNamespace()
     fake_gh.get_repo = lambda repo_name: fake_repo
-    mocker.patch.object(gh_module, "gh", fake_gh)
 
     class FakePrompt:
         def __init__(self, *args, **kwargs):
@@ -54,7 +52,7 @@ def test_create_pr_cancel(mocker, capsys):
         title="Cancel PR", branch_info=branch_info, create_body=lambda: "Body"
     )
 
-    gh_module.create_pr(pr_data, yield_confirmation=False)
+    gh_module.create_pr(pr_data, yield_confirmation=False, gh=fake_gh)
 
     fake_repo.create_pull.assert_not_called()
     captured = capsys.readouterr()
