@@ -79,8 +79,8 @@ More details about it at our [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
 Before getting started, make sure you have the following installed:
 
-- Python 3.7 or higher
-- [Pipenv](https://pipenv.pypa.io/en/latest/)
+- Python 3.9 or higher
+- [Poetry](https://python-poetry.org/)
 
 ## Installation
 
@@ -114,15 +114,13 @@ git clone https://github.com/alissonperez/gpt-pr.git
 
 ```bash
 cd gpt-pr
-pipenv install
+poetry install
 ```
 
 After setting up API keys ([Configuration](#configuration)), you can use GPT-PR within any git project directory. Suppose you've cloned **this project** to `~/workplace/gpt-pr`, here's how you can use it:
 
 ```bash
-PYTHONPATH=~/workplace/gpt-pr/gpt-pr \
-PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile \
-pipenv run python ~/workplace/gpt-pr/gptpr/main.py --help
+poetry run python gpt_pr/main.py --help
 ```
 
 ## Configuration

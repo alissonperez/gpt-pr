@@ -3,25 +3,22 @@ cleanup:
 	rm -rf dist
 	pip uninstall gpt-pr --yes
 
-requirements:
-	pipenv requirements > requirements.txt
-
-install: cleanup requirements
+install: cleanup
 	python setup.py clean --all
 	pip install .
 
-build: cleanup requirements
+build: cleanup
 	@echo "Building..."
-	python3 -m build
+	poetry build
 
 publish-test: build
-	pipenv run twine upload --repository testpypi dist/* --verbose
+	poetry publish -r test-pypi
 
 publish: build
-	pipenv run twine upload --repository pypi dist/* --verbose
+	poetry publish
 
 lint:
-	pipenv run flake8 .
+	poetry run flake8 .
 
 test:
-	pipenv run pytest -vv .
+	poetry run pytest -vv .
