@@ -56,7 +56,7 @@ def _get_open_ai_key():
             'Please set "openai_api_key" config, just run:',
             cc.yellow("gpt-pr-config set openai_api_key [open ai key]"),
         )
-        exit(1)
+        raise SystemExit(1)
 
     return api_key
 

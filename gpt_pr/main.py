@@ -22,7 +22,7 @@ def run(base_branch="main", origin="origin", yield_confirmation=False, version=F
     branch_info = get_branch_info(base_branch, origin, yield_confirmation)
 
     if not branch_info:
-        exit(0)
+        return
 
     pr_data = None
     generate_pr_data = True
