@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from unittest.mock import patch, mock_open
 
-from gpt_pr.version import __version__
+from gpt_pr import __version__
 from gpt_pr.checkversion import (
     get_latest_version,
     load_cache,
@@ -31,7 +31,7 @@ def mock_open_file(mocker):
 
 @pytest.fixture
 def mock_datetime(mocker):
-    return mocker.patch("gptpr.checkversion.datetime")
+    return mocker.patch("gpt_pr.checkversion.datetime")
 
 
 def test_get_latest_version(mock_requests_get, mock_os_path_exists):
