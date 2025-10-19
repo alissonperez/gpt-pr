@@ -21,10 +21,8 @@ def _get_gh_token():
     return gh_token
 
 
-gh = Github(_get_gh_token())
-
-
 def create_pr(pr_data, yield_confirmation):
+    gh = Github(_get_gh_token())
     repo = gh.get_repo(f"{pr_data.branch_info.owner}/{pr_data.branch_info.repo}")
 
     pr_confirmation = (
