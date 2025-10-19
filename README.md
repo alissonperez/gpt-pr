@@ -122,7 +122,7 @@ After setting up API keys ([Configuration](#configuration)), you can use GPT-PR 
 ```bash
 PYTHONPATH=~/workplace/gpt-pr/gpt-pr \
 PIPENV_PIPFILE=~/workplace/gpt-pr/Pipfile \
-pipenv run python ~/workplace/gpt-pr/gptpr/main.py --help
+pipenv run python ~/workplace/gpt-pr/gpt_pr/main.py --help
 ```
 
 ## Configuration
