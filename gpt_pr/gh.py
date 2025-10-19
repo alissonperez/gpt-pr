@@ -16,7 +16,7 @@ def _get_gh_token():
             "more about at",
             CONFIG_README_SECTION,
         )
-        exit(1)
+        raise SystemExit(1)
 
     return gh_token
 
