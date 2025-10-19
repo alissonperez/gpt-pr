@@ -2,7 +2,7 @@ import requests
 import os
 import json
 import tempfile
-from gpt_pr.version import __version__
+from gpt_pr import __version__
 from datetime import datetime, timedelta
 
 from gpt_pr import consolecolor as cc

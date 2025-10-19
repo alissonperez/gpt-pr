@@ -4,7 +4,7 @@ from InquirerPy import inquirer
 from gpt_pr.gitutil import get_branch_info
 from gpt_pr.gh import create_pr
 from gpt_pr.prdata import get_pr_data
-from gpt_pr.version import __version__
+from gpt_pr import __version__
 from gpt_pr.config import config, config_command_example, CONFIG_README_SECTION
 from gpt_pr import consolecolor as cc
 from gpt_pr.checkversion import check_for_updates
