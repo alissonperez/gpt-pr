@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import json
 import os
+
+import tiktoken
 from openai import OpenAI
 
 from gpt_pr.gitutil import BranchInfo
@@ -61,8 +63,15 @@ def _get_open_ai_key():
     return api_key
 
 
-def _count_tokens(text):
-    return len(text.split(" "))
+def _count_tokens(text: str) -> int:
+    """Returns the number of tokens in a text string."""
+    openai_model = config.get_user_config("OPENAI_MODEL")
+    try:
+        encoding = tiktoken.encoding_for_model(openai_model)
+    except KeyError:
+        encoding = tiktoken.get_encoding("cl100k_base")
+
+    return len(encoding.encode(text))
 
 
 @dataclass
