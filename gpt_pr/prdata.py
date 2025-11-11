@@ -150,9 +150,6 @@ def get_pr_data(branch_info):
     result = support_agent.run_sync(messages)
     output = result.output
 
-    import pprint
-    pprint.pprint(output)
-
     return PrData(
         branch_info=branch_info, title=output.title.strip(), body=output.description.strip()
     )
