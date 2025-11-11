@@ -3,11 +3,20 @@ import json
 import os
 
 import tiktoken
-from openai import OpenAI
+from pydantic import BaseModel, Field
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.openai import OpenAIProvider
 
-from gpt_pr.gitutil import BranchInfo
+from gpt_pr.gitutil import BranchInfo, fetch_nearest_git_dir
 from gpt_pr.config import config, CONFIG_PROJECT_REPO_URL
 import gpt_pr.consolecolor as cc
+
+
+class PRTemplateModel(BaseModel):
+    title: str = Field(description="Title of the pull request")
+    description: str = Field(description="Description of the pull request")
+
 
 TOKENIZER_RATIO = 4
 
@@ -17,12 +26,35 @@ DEFAULT_PR_TEMPLATE = (
     "## How was it tested?\n[Fill here with test information from diff content or commits]"
 )
 
+SYSTEM_PROMPT = '''You are a generator of pull request data based on diff changes.
+
+By analyzing the diff content and commit messages between two branches, you must strictly adhere to
+the provided Pull Request template and produce a complete, ready-to-use PR output.
+
+Your response must include:
+- A clear and concise PR title.
+- A PR description that:
+  - Details the work accomplished.
+  - Describes the methodology used, including testing procedures.
+  - Lists significant changes in bullet points.
+
+Rules:
+- Do not include raw diff content of any size.
+- Do not add any explanations, suggestions, or messages directed to the user.
+
+Pull Request Template:
+---
+{pr_template}
+---
+'''
+
 
 def _get_pr_template():
     pr_template = DEFAULT_PR_TEMPLATE
+    git_dir = fetch_nearest_git_dir(os.getcwd())
 
     try:
-        github_dir = os.path.join(os.getcwd(), ".github")
+        github_dir = os.path.join(git_dir, ".github")
         github_files = os.listdir(github_dir)
         pr_template_file = [
             f for f in github_files if f.lower().startswith("pull_request_template")
@@ -101,93 +133,42 @@ class PrData:
         return body
 
 
-functions = [
-    {
-        "name": "create_pr",
-        "description": "Creates a Github Pull Request",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "title": {
-                    "type": "string",
-                    "description": "PR title, following angular commit convention",
-                },
-                "description": {"type": "string", "description": "PR description"},
-            },
-            "required": ["title", "description"],
-        },
-    }
-]
-
-
 def get_pr_data(branch_info):
-    client = OpenAI(api_key=_get_open_ai_key())
-
-    messages = _get_messages(branch_info)
+    system_prompt, messages = _get_messages(branch_info)
 
     openai_model = config.get_user_config("OPENAI_MODEL")
-    print("Using OpenAI model:", cc.yellow(openai_model))
+    model = OpenAIChatModel(openai_model, provider=OpenAIProvider(api_key=_get_open_ai_key()))
 
-    chat_completion = client.chat.completions.create(
-        messages=messages,
-        model=openai_model,
-        functions=functions,
-        function_call={"name": "create_pr"},
-        temperature=0,
-        max_tokens=1000,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
+    support_agent = Agent(
+        model=model,  # TODO: make configurable for other providers
+        output_type=PRTemplateModel,
+        instructions=system_prompt,
     )
 
-    arguments = _parse_json(chat_completion.choices[0].message.function_call.arguments)
+    print("Generating changes description using OpenAI model", cc.yellow(openai_model), '. This may take time...')
+
+    result = support_agent.run_sync(messages)
+    output = result.output
 
     return PrData(
-        branch_info=branch_info, title=arguments["title"], body=arguments["description"]
+        branch_info=branch_info, title=output.title.strip(), body=output.description.strip()
     )
 
 
 def _get_messages(branch_info):
-    system_content = (
-        "You are a development assistant designed to craft Git pull requests "
-        "by incorporating information from main and secondary commits, diff changes, "
-        "and adhering to a provided PR template. Your output includes a complete PR "
-        "template with all necessary details and a suitable PR title. In the "
-        "PR description, detail the work accomplished, the methodology employed, "
-        "including testing procedures, and list significant changes in bullet points "
-        "if they are extensive. Avoid incorporating diff content directly into "
-        "the PR description."
-    )
+    system_prompt = SYSTEM_PROMPT.format(pr_template=_get_pr_template())
 
-    messages = [
-        {"role": "system", "content": system_content},
-    ]
+    messages = []
 
     if len(branch_info.highlight_commits) > 0:
-        messages.append(
-            {
-                "role": "user",
-                "content": "main commits: " + "\n".join(branch_info.highlight_commits),
-            }
-        )
-        messages.append(
-            {
-                "role": "user",
-                "content": "secondary commits: " + "\n".join(branch_info.commits),
-            }
-        )
+        messages.append("main commits:\n" + "\n".join(branch_info.highlight_commits))
+        messages.append("---")
+        messages.append("secondary commits:\n" + "\n".join(branch_info.commits))
     else:
-        messages.append(
-            {
-                "role": "user",
-                "content": "git commits: \n" + "\n".join(branch_info.commits),
-            }
-        )
+        messages.append("git commits:\n" + "\n".join(branch_info.commits))
 
-    messages.append({"role": "user", "content": "PR template:\n" + _get_pr_template()})
-
-    joined_messages = "\n".join([m["content"] for m in messages])
-    current_total_tokens = _count_tokens(joined_messages)
+    joined_messages = "\n".join([m for m in messages])
+    current_total_tokens = _count_tokens(joined_messages) + _count_tokens(SYSTEM_PROMPT)
 
     input_max_tokens = int(config.get_user_config("INPUT_MAX_TOKENS"))
 
@@ -207,11 +188,9 @@ def _get_messages(branch_info):
         )
         print(print_msg, cc.red("Skipping changes diff content..."))
     else:
-        messages.append(
-            {"role": "user", "content": "Diff changes:\n" + branch_info.diff}
-        )
+        messages.append("Diff changes:\n" + branch_info.diff)
 
-    return messages
+    return system_prompt, '\n'.join(messages)
 
 
 def _parse_json(content):

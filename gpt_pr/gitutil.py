@@ -33,11 +33,8 @@ class FileChange:
 
 
 def get_branch_info(base_branch, origin, yield_confirmation):
-    # Get current directory
-    current_dir = os.getcwd()
-
-    # Instantiate the repository
-    repo = Repo(current_dir)
+    git_dir = fetch_nearest_git_dir(os.getcwd())
+    repo = Repo(git_dir)
 
     # Check that the repository loaded correctly
     if not repo.bare:
@@ -77,6 +74,18 @@ def get_branch_info(base_branch, origin, yield_confirmation):
         highlight_commits=highlight_commits,
         diff=_get_diff_changes(repo, base_branch, current_branch.name, yield_confirmation)
     )
+
+
+def fetch_nearest_git_dir(current_dir):
+    # Goes upwards until it finds a .git directory
+    path = os.path.abspath(current_dir)
+    while True:
+        if os.path.isdir(os.path.join(path, '.git')):
+            return path
+        parent = os.path.dirname(path)
+        if parent == path:  # Reached root
+            raise FileNotFoundError(f"Could not find a .git directory in or above '{current_dir}'")
+        path = parent
 
 
 def _branch_exists(repo, branch_name):
