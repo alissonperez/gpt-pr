@@ -3,11 +3,20 @@ import json
 import os
 
 import tiktoken
-from openai import OpenAI
+from pydantic import BaseModel, Field
+from pydantic_ai import Agent, RunContext
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.openai import OpenAIProvider
 
 from gpt_pr.gitutil import BranchInfo, fetch_nearest_git_dir
 from gpt_pr.config import config, CONFIG_PROJECT_REPO_URL
 import gpt_pr.consolecolor as cc
+
+
+class PRTemplateModel(BaseModel):
+    title: str = Field(description="Title of the pull request")
+    description: str = Field(description="Description of the pull request")
+
 
 TOKENIZER_RATIO = 4
 
@@ -29,22 +38,13 @@ Your response must include:
   - Lists significant changes in bullet points.
 
 Rules:
-- Include small diff snippets only when the change is minimal and helps clarify the modification.
-- Do not include raw diff content for large changes.
+- Do not include raw diff content of any size.
 - Do not add any explanations, suggestions, or messages directed to the user.
-- Output only the JSON object with `title` and `description` fields.
-- The JSON must be valid, compact, and unformatted.
 
 Pull Request Template:
 ---
 {pr_template}
 ---
-
-Output format (example):
----
-{{"title": "feat(dependencies): pin dependencies versions", "description": "### Ref. [Link]\n\n## What was done?\n..."}}
----
-
 '''
 
 
@@ -133,23 +133,27 @@ class PrData:
 
 
 def get_pr_data(branch_info):
-    client = OpenAI(api_key=_get_open_ai_key())
-
     system_prompt, messages = _get_messages(branch_info)
 
     openai_model = config.get_user_config("OPENAI_MODEL")
-    print("Generating changes description using OpenAI model", cc.yellow(openai_model), '. This may take time...')
+    model = OpenAIChatModel(openai_model, provider=OpenAIProvider(api_key=_get_open_ai_key()))
 
-    response = client.responses.create(
-        model=openai_model,
+    support_agent = Agent(
+        model=model,  # TODO: make configurable for other providers
+        output_type=PRTemplateModel,
         instructions=system_prompt,
-        input=messages
     )
 
-    arguments = _parse_json(response.output_text)
+    print("Generating changes description using OpenAI model", cc.yellow(openai_model), '. This may take time...')
+
+    result = support_agent.run_sync(messages)
+    output = result.output
+
+    import pprint
+    pprint.pprint(output)
 
     return PrData(
-        branch_info=branch_info, title=arguments["title"].strip(), body=arguments["description"].strip()
+        branch_info=branch_info, title=output.title.strip(), body=output.description.strip()
     )
 
 
@@ -160,7 +164,7 @@ def _get_messages(branch_info):
 
     if len(branch_info.highlight_commits) > 0:
         messages.append("main commits:\n" + "\n".join(branch_info.highlight_commits))
-        messages.append("---"),
+        messages.append("---")
         messages.append("secondary commits:\n" + "\n".join(branch_info.commits))
     else:
         messages.append("git commits:\n" + "\n".join(branch_info.commits))
