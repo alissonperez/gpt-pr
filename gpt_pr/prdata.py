@@ -18,20 +18,33 @@ DEFAULT_PR_TEMPLATE = (
 )
 
 SYSTEM_PROMPT = '''You are a generator of pull request data based on diff changes.
-By incorporating diff changes and commit messages between two branches, you adhere to a provided PR template and output the pull request parameters filled.
-Your output includes a complete PR template with all necessary details and a suitable PR title.
-In the PR description, detail the work accomplished, the methodology employed (including testing procedures), and list significant changes in bullet points.
-do not add diff content in description only for very small changes.
 
-Pull request template:
+By analyzing the diff content and commit messages between two branches, you must strictly adhere to the provided Pull Request template and produce a complete, ready-to-use PR output.
+
+Your response must include:
+- A clear and concise PR title.
+- A PR description that:
+  - Details the work accomplished.
+  - Describes the methodology used, including testing procedures.
+  - Lists significant changes in bullet points.
+
+Rules:
+- Include small diff snippets only when the change is minimal and helps clarify the modification.
+- Do not include raw diff content for large changes.
+- Do not add any explanations, suggestions, or messages directed to the user.
+- Output only the JSON object with `title` and `description` fields.
+- The JSON must be valid, compact, and unformatted.
+
+Pull Request Template:
 ---
 {pr_template}
 ---
 
-Output only valid JSON, with no formating. Example:
+Output format (example):
 ---
-{{"title": "feat(dependencies): pin dependencies versions", "description": "### Ref. [Link]\n\n## What was done? ..."}}
+{{"title": "feat(dependencies): pin dependencies versions", "description": "### Ref. [Link]\n\n## What was done?\n..."}}
 ---
+
 '''
 
 
