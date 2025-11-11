@@ -75,6 +75,7 @@ def get_branch_info(base_branch, origin, yield_confirmation):
         diff=_get_diff_changes(repo, base_branch, current_branch.name, yield_confirmation)
     )
 
+
 def fetch_nearest_git_dir(current_dir):
     # Goes upwards until it finds a .git directory
     while current_dir != os.path.dirname(current_dir):

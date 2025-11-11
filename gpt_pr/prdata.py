@@ -4,7 +4,7 @@ import os
 
 import tiktoken
 from pydantic import BaseModel, Field
-from pydantic_ai import Agent, RunContext
+from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
@@ -28,7 +28,8 @@ DEFAULT_PR_TEMPLATE = (
 
 SYSTEM_PROMPT = '''You are a generator of pull request data based on diff changes.
 
-By analyzing the diff content and commit messages between two branches, you must strictly adhere to the provided Pull Request template and produce a complete, ready-to-use PR output.
+By analyzing the diff content and commit messages between two branches, you must strictly adhere to
+the provided Pull Request template and produce a complete, ready-to-use PR output.
 
 Your response must include:
 - A clear and concise PR title.
