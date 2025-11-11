@@ -78,14 +78,14 @@ def get_branch_info(base_branch, origin, yield_confirmation):
 
 def fetch_nearest_git_dir(current_dir):
     # Goes upwards until it finds a .git directory
-    while current_dir != os.path.dirname(current_dir):
-        git_dir = os.path.join(current_dir, '.git')
-        if os.path.isdir(git_dir):
-            return current_dir
-
-        current_dir = os.path.dirname(current_dir)
-
-    return current_dir
+    path = os.path.abspath(current_dir)
+    while True:
+        if os.path.isdir(os.path.join(path, '.git')):
+            return path
+        parent = os.path.dirname(path)
+        if parent == path:  # Reached root
+            raise FileNotFoundError(f"Could not find a .git directory in or above '{current_dir}'")
+        path = parent
 
 
 def _branch_exists(repo, branch_name):
