@@ -5,7 +5,7 @@ import os
 import tiktoken
 from openai import OpenAI
 
-from gpt_pr.gitutil import BranchInfo
+from gpt_pr.gitutil import BranchInfo, fetch_nearest_git_dir
 from gpt_pr.config import config, CONFIG_PROJECT_REPO_URL
 import gpt_pr.consolecolor as cc
 
@@ -37,9 +37,10 @@ Output only valid JSON, with no formating. Example:
 
 def _get_pr_template():
     pr_template = DEFAULT_PR_TEMPLATE
+    git_dir = fetch_nearest_git_dir(os.getcwd())
 
     try:
-        github_dir = os.path.join(os.getcwd(), ".github")
+        github_dir = os.path.join(git_dir, ".github")
         github_files = os.listdir(github_dir)
         pr_template_file = [
             f for f in github_files if f.lower().startswith("pull_request_template")
