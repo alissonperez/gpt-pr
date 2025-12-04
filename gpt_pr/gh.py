@@ -49,8 +49,9 @@ def create_pr(pr_data, yield_confirmation, gh=None):
     existing_pr = _get_existing_pr(repo, pr_data.branch_info.branch)
 
     if existing_pr:
+        message = f"A pull request for branch '{pr_data.branch_info.branch}' already exists. Do you want to update it?"
         update_confirmation = inquirer.confirm(
-            message=f"A pull request for branch '{pr_data.branch_info.branch}' already exists. Do you want to update it?",
+            message=message,
             default=True,
         ).execute()
 
