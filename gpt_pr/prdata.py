@@ -43,9 +43,7 @@ Rules:
 - Do not add any explanations, suggestions, or messages directed to the user.
 
 Pull Request Template:
----
 {pr_template}
----
 '''
 
 
