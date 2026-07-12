@@ -1,5 +1,8 @@
 # GPT-PR
 
+> [!WARNING]
+> **This project is deprecated.** With the rise of full-featured LLM-powered CLI tools (such as [Claude Code](https://claude.com/product/claude-code), [OpenAI Codex](https://openai.com/index/introducing-codex/), and others) that natively handle git workflows, commit messages, and PR generation, GPT-PR has become obsolete. It is no longer actively maintained. Consider using one of these alternatives instead.
+
 GPT-PR is an open-source command-line tool designed to streamline your GitHub workflow for opening PRs. Leveraging OpenAI's ChatGPT API, it automatically opens a GitHub Pull Request with a predefined description and title directly from your current project directory.
 
 [![asciicast](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A.svg)](https://asciinema.org/a/u0PwZlNjAGZcdXPPrjf84wj2A)
